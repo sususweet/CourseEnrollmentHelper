@@ -1,0 +1,150 @@
+
+// Saves options to localStorage.
+function save_options() {
+  var select = document.getElementById("color");
+  var color = select.children[select.selectedIndex].value;
+  localStorage["favorite_color"] = color;
+
+  // Update status to let user know options were saved.
+  var status = document.getElementById("status");
+  status.innerHTML = "Options Saved.";
+  setTimeout(function() {
+    status.innerHTML = "";
+  }, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  var favorite = localStorage["favorite_color"];
+  if (!favorite) {
+    return;
+  }
+  var select = document.getElementById("color");
+  for (var i = 0; i < select.children.length; i++) {
+    var child = select.children[i];
+    if (child.value == favorite) {
+      child.selected = "true";
+      break;
+    }
+  }
+}
+
+function ChangeButtontype(type,state){
+	var id;
+	if (state=="enabled"){
+		id=type+"enabled";
+		document.getElementById(id).style.backgroundColor='#FD6464';
+		id=type+"disabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+	}else if(state=="disabled"){
+		try{
+		id=type+"disabled";
+		document.getElementById(id).style.backgroundColor='#FD6464';
+		id=type+"enabled1";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		id=type+"enabled2";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		id=type+"enabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		
+		}
+		catch(err){
+			
+		}
+	}else if(state=="ban"){
+		id=type+"disabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		id=type+"enabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+	}else if(state=="enabled2"){
+		id=type+"disabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		id=type+"enabled2";
+		document.getElementById(id).style.backgroundColor='#FD6464';
+		id=type+"enabled1";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+	}else if(state=="enabled1"){
+		id=type+"disabled";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+		id=type+"enabled1";
+		document.getElementById(id).style.backgroundColor='#FD6464';
+		id=type+"enabled2";
+		document.getElementById(id).style.backgroundColor='#D1D1D1';
+	}
+	
+	
+}
+
+function ChangeSettings(type,state){
+	var cmd;
+	cmd=type+state;
+	chrome.extension.sendMessage({cmd: cmd},function(response) {});
+	ChangeButtontype(type,state);
+}
+
+
+function restore(){
+
+  var Showscore = localStorage["Showscore"];
+  if (!Showscore) {
+    localStorage["Showscore"] = "enabled";
+  }
+  ChangeButtontype("score",Showscore);
+  
+  var Timecheck=localStorage["Timecheck"];
+  if (!Timecheck) {
+    localStorage["Timecheck"] = "enabled";
+  }
+  ChangeButtontype("timecheck",Timecheck);
+
+  	var Stu = localStorage["Stu"];
+	if(localStorage["Beta"]==1){
+		Beta="内测版";
+		document.getElementById("beta").style.color='red';
+		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+"）";
+	}else {
+		Beta="稳定版";
+		ChangeButtontype("score","ban");
+		document.getElementById("beta").style.color='black';
+		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+"）\n灰色功能受限，开通权限后请重启浏览器";
+	}
+}
+
+function infoabout(){
+	chrome.extension.sendMessage({cmd: "about"},function(response) {});
+}
+
+$(document).ready(function() { 
+	restore();
+	document.getElementById("scoreenabled1").onclick=function(){
+		if(localStorage["Beta"]!=1){
+			ChangeSettings('score','ban');
+		}else {
+			ChangeSettings('score','enabled1');
+		}
+	};
+	document.getElementById("scoreenabled2").onclick=function(){
+		if(localStorage["Beta"]!=1){
+			ChangeSettings('score','ban');
+		}else {
+			ChangeSettings('score','enabled2');
+		}
+	};
+	document.getElementById("scoredisabled").onclick=function(){
+		if(localStorage["Beta"]!=1){
+			ChangeSettings('score','ban');
+		}else {
+			ChangeSettings('score','disabled');
+		}
+	};
+	
+	
+	document.getElementById("timecheckenabled").onclick=function(){ChangeSettings('timecheck','enabled');};
+	document.getElementById("timecheckdisabled").onclick=function(){ChangeSettings('timecheck','disabled');};
+	//document.getElementById("sparecheckenabled").onclick=function(){ChangeSettings('sparecheck','enabled');};
+	//document.getElementById("sparecheckdisabled").onclick=function(){ChangeSettings('sparecheck','disabled');};
+	document.getElementById("about").onclick=infoabout; 
+}); 
+
+
+
