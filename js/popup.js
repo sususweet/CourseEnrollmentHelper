@@ -100,7 +100,7 @@ function restore(){
 			Buttonchange('newverdisabled','unselected');
 		ChangeSettings('NewVer','disabled');
 		document.getElementById("beta").style.color='black';
-		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+'）<br>灰色功能受限，开通权限后请重启浏览器.<a href="http://115.159.96.65/alienrollment/apply.php" target="_blank">申请内测</a>';
+		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+'）<br>灰色功能受限，开通权限后请重启浏览器.<a href="https://www.zju-lab.cn/alienrollment/apply.php" target="_blank">申请内测</a>';
 	}
 }
 

@@ -1,7 +1,7 @@
 ﻿{
 "manifest_version":2,
 "name":"阿狸选课",
-"version":"4.12",
+"version":"4.13",
 "minimum_chrome_version":"30.0.1312.52",
 "description":"浙江大学教务系统选课助手，可查看老师在ZJU学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~",
 "icons":{"16":"images/icon16.png","48":"images/icon48.png","128":"images/icon128.png"},
@@ -29,7 +29,6 @@
 	"all_frames":true
 	}],
 "permissions":["tabs","background","contextMenus","management","cookies","webRequest","http://jwbinfosys.zju.edu.cn/*","http://10.202.78.13/*","http://10.202.78.14/*","http://10.202.78.12/*","http://115.159.96.65/*","http://chalaoshi.cn/*","webRequestBlocking","notifications"],
-
-"update_url":"http://upext.chrome.360.cn/intf.php?method=ExtUpdate.query",
+"update_url":"http://clients2.google.com/service/update2/crx",
 "background":{"page":"background.html"}
 }

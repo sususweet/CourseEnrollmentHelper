@@ -99,17 +99,17 @@ function isFirstrun(){
 isFirstrun();
 
 function GenuineVerify(){
-	
+	var targetappid_sha = "df70bb47192516150ad8582f10b4ae848682d555";
+	var targetappid_sha_google = "fd5f59a082364ddcb6aaa9d6d558f70c6a4ebb24";
 	appid= chrome.app.getDetails().id;
-	targetappid = "logpipnmmbgckahifcdgblkbjlcljhfb";
 chrome.management.get(appid,function (t) {
 	Debugmode=t.installType;
-	if (Debugmode!="development"&&appid!=targetappid){
+	if (Debugmode!="development"&&hex_sha1(appid)!=targetappid_sha&&hex_sha1(appid)!=targetappid_sha_google){
 		isgenuine=0;
 	}else{
 		isgenuine=1;
 	}
-	//console.log(isgenuine);
+	console.log(isgenuine);
 });
 }
 GenuineVerify();
