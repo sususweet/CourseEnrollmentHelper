@@ -4,7 +4,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 	var blockingResponse = modifyHeader(headers);
 	return blockingResponse;
 }, {
-	urls : ["http://chalaoshi.cn/*"]
+	urls : ["http://chalaoshi.cn/*","https://chalaoshi.cn/*"]
 }, ["requestHeaders", "blocking"]);
 
 //写cookies 
@@ -52,11 +52,11 @@ function modifyHeader(_headers){
 	
 	/*for (var j = 0; j < _headers.length; j++){
 		if(_headers[j].name == "Cookie"){
-			_headers[j].value = "sessionid=6focsbf7h2keeotg94saab2ycda06uds";
+			_headers[j].value = "sessionid=fzp352g5bppgmnkjdnk2jkpirhlkopgr";
 		}
 		
 	}
-		_headers.push({name:'Cookie',value:"sessionid=6focsbf7h2keeotg94saab2ycda06uds"});
+		_headers.push({name:'Cookie',value:"sessionid=fzp352g5bppgmnkjdnk2jkpirhlkopgr"});
 */
 	
 	blockingResponse.requestHeaders = _headers;
