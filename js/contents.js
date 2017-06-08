@@ -217,8 +217,7 @@ function Checktime(student){
 //console.log (busytime);
     }
     catch (err){
-        swal("上课时间获取模块错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~\n\n错误信息：\n"+err, "error");
-        console.log(err);
+        errorHandler("上课时间获取模块错误！", err);
     }
 
 }
@@ -346,8 +345,7 @@ function Time(){
     }
     catch(err)
     {
-        swal("时间冲突判断模块错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~\n\n错误信息：\n"+err, "error");
-        console.log(err);
+        errorHandler("时间冲突判断模块错误！", err);
     }
 }
 
@@ -367,9 +365,8 @@ function Spare(){
             }
         }
     }
-    catch(err)
-    {
-        swal("课程余量判断模块错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~", "error");
+    catch(err) {
+        errorHandler("课程余量判断模块错误！", err);
     }
 }
 
@@ -575,17 +572,15 @@ function getScores(times){
 
         });
     }
-    catch(err)
-    {
-        console.log(err);
-        swal("教师评分及均绩查询模块错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~", "error");
+    catch(err) {
+        errorHandler("教师评分及均绩查询模块错误！", err);
     }
 }
 
 function Main(){
     try{
         if (Timecheck=="disabled"&&Showscore=="disabled"){
-            swal("插件功能受限！", "主人貌似啥功能都没有开启哦~伐开心 TAT！快去浏览器右上角点击设置开启吧~", "warning");
+           // swal("插件功能受限！", "主人貌似啥功能都没有开启哦~伐开心 TAT！快去浏览器右上角点击设置开启吧~", "warning");
         }else if (permit == 0 && Showscore == "enabled"){
             Showscore="disabled";
             chrome.extension.sendMessage({cmd: "scoredisabled"},function(response) {});
@@ -601,14 +596,30 @@ function Main(){
         if (Showscore=="enabled"){ChangeTitle();getScores(1);}
         else{Adjustlineheight();}
     }
-    catch(err)
-    {
-        swal("Main函数错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~\n\n错误信息：\n"+err, "error");
-        console.log(err);
+    catch(err) {
+        errorHandler("Main函数错误！", err);
     }
 }
 
-
+function errorHandler(errdesc, errmsg){
+    $.ajax({
+        url: "https://enrollment.zju-lab.cn/user/errfeedback",
+        timeout : 3000,
+        type : 'POST',
+        dataType:'json',
+        data:{
+            errname: errmsg.name,
+            errmessage: errmsg.message,
+            errlog: errmsg.stack,
+            userAgent: navigator.userAgent,
+            stuid: student,
+            version: nowver
+        },
+        cache:false
+    });
+    console.log(errmsg);
+    swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
+}
 /*-------------------------------------核心函数结束-------------------------------*/
 /*-------------------------------------主程序开始-------------------------------*/
 adjustinner=window.document.location.origin;
@@ -620,8 +631,7 @@ try{
     student=student[0];
     chrome.extension.sendMessage({cmd: "Stu",data:student},function(response) {});
 }catch (err){
-    swal("获取学号信息错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~\n\n错误信息：\n"+err, "error");
-    console.log(err);
+    errorHandler("获取学号信息错误！", err);
 }
 
 chrome.extension.sendRequest({key: "update"},function(res) {
@@ -701,10 +711,8 @@ chrome.extension.sendRequest({key: "update"},function(res) {
                     }
                 });
             }
-            catch(err)
-            {
-                swal("主程序错误！", "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，主人检查下浏览器版本是否最新哦，或者联系作者详细描述错误情形以帮助改进插件吧~\n\n错误信息：\n"+err, "error");
-                console.log(err);
+            catch(err) {
+                errorHandler("主程序错误！", err);
             }
         }
     });

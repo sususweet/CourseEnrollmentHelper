@@ -4,6 +4,9 @@
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/popup.js"></script>
     <style type="text/css">
+        body,html{
+            font-family: "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
+        }
         .button {
             background-color: #FFFFFF;
             display: inline-block;
@@ -45,14 +48,12 @@
 
         .tab {
             font-size: 14px;
-            font-family: "微软雅黑";
             height:25px;
             vertical-align: middle;
             line-height:25px;
         }
         .tababout {
             font-size: 14px;
-            font-family: "黑体";
             height:25px;
             vertical-align: middle;
             line-height:25px;
@@ -62,19 +63,17 @@
             float:left;
             cursor: pointer;
             font-size: 10px;
-            font-family: "微软雅黑";
             height:25px;
             vertical-align: middle;
             line-height:25px;
             color: #FF0000;
             font-weight: bold;
-            width:50%;
+            width:33%;
         }
         .tabbottomlogo {
             float:left;
             cursor: pointer;
             font-size: 10px;
-            font-family: "微软雅黑";
             height:25px;
             vertical-align: middle;
             line-height:25px;
@@ -83,7 +82,6 @@
             width:10%;
         }
         .title {
-            font-family: "微软雅黑";
             font-size: 18px;
         }
         .STYLE4 {font-size: 10px}
@@ -122,7 +120,7 @@
     </div>
 
 
-    <div style="width: 100%; ">
+    <div style="width: 100%; display: none">
         <div align="center" class="tab">新系统适配</div>
         <div class="buttonWrapper">
             <div class="button" id="newverenabled">
@@ -137,6 +135,7 @@
 
     <div >
         <div align="center" id="about" class="tabbottom">关于插件</div>
+        <div align="center"><a href="https://enrollment.zju-lab.cn/apply/" target="_blank" class="tabbottom">意见反馈</a></div>
         <!--div align="center"><object data="images/qsclogo.svg" type="image/svg+xml" target="_blank" class="tabbottomlogo"></object></div-->
         <div align="center"><a href="help.html" target="_blank" class="tabbottom">使用帮助</a></div>
     </div>

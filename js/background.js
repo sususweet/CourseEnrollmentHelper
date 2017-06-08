@@ -134,7 +134,7 @@ chrome.extension.onMessage.addListener(function(request) {
         }else {
             verdescription="公开稳定版";
         }
-        alert("版本："+nowver+" "+verdescription+"\n插件作者：熊熊看星星\n反馈邮箱：1017417552@qq.com\n\n教师评分数据来源：@ZJU学习帝");
+        alert("版本："+nowver+" "+verdescription+"\n插件作者：苏酥甜心糕\n\n教师评分数据来源：@ZJU学习帝");
     }
     else if(request.cmd=="Stu"){
         localStorage["Stu"] = request.data;
