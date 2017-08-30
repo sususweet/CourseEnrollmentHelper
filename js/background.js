@@ -87,8 +87,9 @@ function Checkpermit(){
 function isFirstrun(){
     var firstrun=localStorage["isFirstrun"];
     if (!firstrun||firstrun==0) {
-        window.open(chrome.extension.getURL('help.html'));
-        localStorage["isFirstrun"] = 1;
+        //window.open(chrome.extension.getURL('help.html'));
+	window.open('https://enrollment.zju-lab.cn/help');
+	localStorage["isFirstrun"] = 1;
     }
     var Showinfo=localStorage["Showinfo"];
     if (!Showinfo) {

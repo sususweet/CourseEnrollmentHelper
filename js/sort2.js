@@ -7,9 +7,9 @@ function sortTable(code,iCol,sDataType)
 {
 
     var oTbody=document.getElementById(code); //获取表格的tbody
-	console.log(oTbody);
+	//console.log(oTbody);
     var colDataRows=oTbody.rows; //获取tbody里的所有行的引用, 注意rows从tBodies[0]中取
-console.log(colDataRows);
+    //console.log(colDataRows);
 			
     var aTRs=new Array(); //定义aTRs数组用于存放tbody里的行
     for(var i=0;i<colDataRows.length;i++)  //依次把所有行放如aTRs数组

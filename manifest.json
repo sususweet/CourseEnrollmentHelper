@@ -1,9 +1,9 @@
 ﻿{
 "manifest_version":2,
 "name":"选课助手",
-"version":"4.16",
+"version":"4.19",
 "minimum_chrome_version":"30.0.1312.52",
-"description":"浙江大学教务系统选课助手，可查看老师在ZJU学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~",
+"description":"浙江大学教务系统选课助手，可查看老师在学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~",
 "icons":{"16":"images/icon16.png","32":"images/icon32.png","48":"images/icon48.png","128":"images/icon128.png"},
 "browser_action":{
 	"default_icon": "images/icon32.png",
