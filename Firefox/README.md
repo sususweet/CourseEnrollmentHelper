@@ -1,1 +1,0 @@
-This is a project for course enrollment on jwbinfosys.zju.edu.cn.
