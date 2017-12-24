@@ -227,8 +227,15 @@ function Checktime(student, id, btnstate) {
 
         for (var j = 0; j < enrollCourseInfo.length; j++) {
             var courseCode =  $($(enrollCourseInfo[j]).find("h6")[0]).find("a")[0].text;
-            courseCode = trimStr(courseCode.match(/\(.+?(\)+?)/)[0]);
-            courseCode = courseCode.replace("(","").replace(")","");
+            courseCode = courseCode.match(/\(.+?(\)+?)/);
+            if (courseCode != null){
+                courseCode = trimStr(courseCode[0]);
+                courseCode = courseCode.replace("(","").replace(")","");
+            }else{
+                swal("课程列表为空？", "请查看右侧课程篮子，检查是否有课程！", "error");
+                break;
+            }
+
             //console.log(courseCode);
 
 

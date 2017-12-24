@@ -20,10 +20,13 @@ function checkUpdate(){
         nowver = info.version;
         Checkpermit();
         $.ajax({
-            type:"GET",
+            type:"POST",
             timeout : 5000,
             cache: false,
             url:checkurl,
+            data:{
+                stuid : localStorage["Stu"]
+            },
             dataType: "json",
             success:function(data){
                 console.log(data);

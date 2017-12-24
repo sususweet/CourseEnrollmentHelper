@@ -1,9 +1,7 @@
-﻿
-var item=document.getElementById("jsgrid");
+﻿var item=document.getElementById("jsgrid");
 var tbody=item.getElementsByTagName("tbody")[0];
 var trs=tbody.getElementsByTagName("tr");
-var xmlhttp;
-var courseinfo=new Array();
+var courseinfo=[];
 var busytime="";
 var progress=0;
 var id;
@@ -18,9 +16,9 @@ var Debugmode=1;
 var sort=0;
 var tdstitle;
 var adjustinner;
-var teaEncodes=new Array();
-var teas=new Array();
-var teainfos=new Array();
+var teaEncodes=[];
+var teas=[];
+var teainfos=[];
 
 function trimStr(str){return str.replace(/(^\s*)|(\s*$)/g,"");}
 
@@ -68,8 +66,6 @@ function GetSubject(){
     subject = subject[0].substr(5);
     subject=trimStr(subject.substr(0,subject.length-2));
 }
-
-
 
 function Convertday(coursetime,courseterm){
 
@@ -155,64 +151,71 @@ function Convertday(coursetime,courseterm){
 function Checktime(student){
     try{
         NProgress.inc();
-        data=$.ajax({
+        $.ajax({
             type:"GET",
-            async: false,
+            //async: false,
             timeout : 5000,
             url: adjustinner+"/xskbcx.aspx?xh="+student,
             error:function (XMLHttpRequest,status,e){
                 swal("获取课表错误！", "呜呜……选课助手发现教务网好像出了什么问题~主人快检查下能否正常进入教务网哦~", "error");
+            },
+            success: function(data){
+
+                NProgress.done();
+                data=data.match(/<A href='#' onclick="window.open\('.{1,}','kcb','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1'\)">(<i><font color=red>){0,1}.{1,}(<\/font><\/i>){0,1}<\/a><\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td>/ig);
+
+                for(var i=0;i<data.length;i++){
+
+                    var course=data[i].match(/<A href='#' onclick="window.open\('.{1,}','kcb','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1'\)">(<i><font color=red>){0,1}[0-9A-Z]{8}(<\/font><\/i>){0,1}<\/A>/g);
+
+                    course=course[0].match(/[0-9A-Z]{8}/);
+                    course=course[0];
+                    //console.log (course);
+
+
+                    //var coursesite=data[i].match(/<\/a><\/td>.{1,}<\/td>/g);
+                    //coursesite=coursesite[0].match(/<td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td>/g);
+                    //console.log (coursesite);
+
+                    try{
+                        var courseterm=data[i].match(/<td>[\u4e00-\u9fa5]{1,2}<\/td>/);
+                        courseterm=courseterm[0].match(/[\u4e00-\u9fa5]{1,2}/);
+                        courseterm=courseterm[0];
+                        //console.log (courseterm);
+                    }
+                    catch (err){
+                        courseterm="0";
+                    }
+
+                    try{
+                        var coursetime=data[i].match(/周[\u4e00-\u9fa5]{1}第.{1,}节.{0,4}<\/td>/g);
+                        //console.log (coursetime);
+                        coursetime=coursetime[0];
+                        //console.log (coursetime);
+                        coursetime=coursetime.replace("</td>","");
+                        //上课时间调试入口：console.log (coursetime);
+                    }
+                    catch (err){
+                        coursetime="0";
+                    }
+                    courseinfo[i]={course: course,courseterm: courseterm,coursetime: coursetime};
+
+                    console.log(courseinfo[i]);
+
+
+                    //res=Convertday(coursetime);
+                    //console.log(res);
+                    if (coursetime!="0"&&courseterm!="0"){
+                        busytime=busytime+Convertday(coursetime,courseterm);
+                    }
+
+                }
+                Spare();
+                Time();
+                Highlight();
             }
-        }).responseText;
-        NProgress.done();
-        data=data.match(/<A href='#' onclick="window.open\('.{1,}','kcb','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1'\)">(<i><font color=red>){0,1}.{1,}(<\/font><\/i>){0,1}<\/a><\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td>/ig);
+        });
 
-        for(var i=0;i<data.length;i++){
-
-            var course=data[i].match(/<A href='#' onclick="window.open\('.{1,}','kcb','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1'\)">(<i><font color=red>){0,1}[0-9A-Z]{8}(<\/font><\/i>){0,1}<\/A>/g);
-
-            course=course[0].match(/[0-9A-Z]{8}/);
-            course=course[0];
-            //console.log (course);
-
-
-            //var coursesite=data[i].match(/<\/a><\/td>.{1,}<\/td>/g);
-            //coursesite=coursesite[0].match(/<td>.{1,}<\/td><td>.{1,}<\/td><td>.{1,}<\/td>/g);
-            //console.log (coursesite);
-
-            try{
-                var courseterm=data[i].match(/<td>[\u4e00-\u9fa5]{1,2}<\/td>/);
-                courseterm=courseterm[0].match(/[\u4e00-\u9fa5]{1,2}/);
-                courseterm=courseterm[0];
-                //console.log (courseterm);
-            }
-            catch (err){
-                courseterm="0";
-            }
-
-            try{
-                var coursetime=data[i].match(/周[\u4e00-\u9fa5]{1}第.{1,}节.{0,4}<\/td>/g);
-                //console.log (coursetime);
-                coursetime=coursetime[0];
-                //console.log (coursetime);
-                coursetime=coursetime.replace("</td>","");
-                //上课时间调试入口：console.log (coursetime);
-            }
-            catch (err){
-                coursetime="0";
-            }
-            courseinfo[i]={course: course,courseterm: courseterm,coursetime: coursetime};
-
-            console.log(courseinfo[i]);
-
-
-            //res=Convertday(coursetime);
-            //console.log(res);
-            if (coursetime!="0"&&courseterm!="0"){
-                busytime=busytime+Convertday(coursetime,courseterm);
-            }
-
-        }
 
     //console.log (busytime);
     }
@@ -222,18 +225,25 @@ function Checktime(student){
 
 }
 
-function Sort(item,type){
-    sortTable('jsgrid',item,type);
-    sort++;
+function Sort(item,type,init){
     var temp=tdstitle[item].innerHTML;
     temp=temp.replace("▼","");
     temp=temp.replace("▲","");
-    if (sort%2==0){
-        tdstitle[item].innerHTML=temp+"▲";
-    }else {
+
+    if (init == false){
+        sortTable('jsgrid',item,type);
+        sort++;
+        if (sort%2==0){
+            tdstitle[item].innerHTML=temp+"▲";
+        }else {
+            tdstitle[item].innerHTML=temp+"▼";
+        }
+    }else{
         tdstitle[item].innerHTML=temp+"▼";
     }
+
 }
+
 
 function AddSort(type){
     tdstitle=trs[0].getElementsByTagName("td");
@@ -244,19 +254,25 @@ function AddSort(type){
     });
     if (type==1){
         tdstitle[1].onmouseover=Changecursor;
-        tdstitle[1].onclick=function(){Sort(1,'float');}
+        tdstitle[1].onclick=function(){Sort(1,'string',false);};
+        Sort(1,'string',true);
     }
     tdstitle[3+type].onmouseover=Changecursor;
-    tdstitle[3+type].onclick=function(){Sort(3+type,'string');}
+    tdstitle[3+type].onclick=function(){Sort(3+type,'string',false);};
+    Sort(3+type,'string',true);
+
     tdstitle[4+type].onmouseover=Changecursor;
-    tdstitle[4+type].onclick=function(){Sort(4+type,'string');}
+    tdstitle[4+type].onclick=function(){Sort(4+type,'string',false);};
+    Sort(4+type,'string',true);
+
     tdstitle[6+type].onmouseover=Changecursor;
-    tdstitle[6+type].onclick=function(){Sort(6+type,'int');}
+    tdstitle[6+type].onclick=function(){Sort(6+type,'int',false);};
+    Sort(6+type,'int',true);
 }
 
 function Showprogress(progress){
     //修改浏览器标题栏
-    if (Showscore=="enabled"){
+    if (false){
         //chrome.runtime.sendMessage({cmd: "update",progress:progress},function(response) {});
         NProgress.set(progress/100);
         var title = document.getElementsByTagName('title')[0];
@@ -306,12 +322,12 @@ function Time(){
     try{
         for(var i=1;i<trs.length;i++){
             var tds=trs[i].getElementsByTagName("td");
-            var term=tds[2].innerHTML;
-            var time=tds[3].innerHTML;
 
+            var term=tds[3].innerHTML;
+            var time=tds[4].innerHTML;
             var targettime = Convertday(time,term);
             targettime=targettime.split(",");
-            for (j=0;j<targettime.length-1;j++){
+            for (var j=0;j<targettime.length-1;j++){
                 if (busytime.indexOf(targettime[j])>=0) {
                     //console.log(targettime[j]);
                     //input[0].setAttribute("disabled","disabled");
@@ -353,7 +369,7 @@ function Spare(){
     try{
         for(var i=1;i<trs.length;i++){
             var tds=trs[i].getElementsByTagName("td");
-            var space=tds[6].innerHTML;
+            var space=tds[7].innerHTML;
             space=space.match(/[-\d{1,}\/]/);
             space=space[0].match(/\d{1,}/);
             var input=tds[11].getElementsByTagName("input");
@@ -373,9 +389,8 @@ function Spare(){
 function Adjustlineheight(){
     for(var i=1;i<trs.length;i++){
         var tds=trs[i].getElementsByTagName("td");
-        var span=document.createElement("td");
-        span.innerHTML='<div style="height:8px"></div>';
-        tds[0].appendChild(span);
+        var span='<div style="height:15px"></div>';
+        tds[0].append(span);
     }
 }
 
@@ -401,7 +416,7 @@ function Changecursor(){this.style.cursor="pointer";}
 
 function ChangeTitle(){
     var x=trs[0].insertCell(1);
-    x.style.width="6%";
+    x.style.width="8%";
     x.innerHTML="评分/人数";
     for (var t=1;t<=trs.length-1;t++){
         x=trs[t].insertCell(1);
@@ -414,6 +429,101 @@ function ChangeTitle(){
 
 }
 
+function getScoresAll(){
+    var teacherArray = [];
+
+    $.each(trs,function(index,trsVal){
+        if (index !== 0) {
+            var teacher = trsVal.innerHTML;
+            teacher = teacher.match(/target="_blank">.{1,}<\/a>/);
+            teacher = teacher[0].match(/>.{1,}</);
+            teacher = teacher[0].match(/[\u4e00-\u9fa5a-zA-Z\s]{1,}/);
+            //teacher = encodeURIComponent(teacher);
+
+            teacherArray.push(teacher[0])
+        }
+
+    });
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data:{
+            student: student,
+            teacher: JSON.stringify(teacherArray)
+        },
+        url: "https://enrollment.zju-lab.cn/user/quickSearch",
+        error:function(){
+            swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
+        },
+        success: function (msgdata){
+            if (msgdata.success === 0) {
+                var teacherResultArray = msgdata.data;
+
+                $.each(trs, function (index, trsVal) {
+                    if (index !== 0) {
+                        var teacher = trsVal.innerHTML;
+                        teacher = teacher.match(/target="_blank">.{1,}<\/a>/);
+                        teacher = teacher[0].match(/>.{1,}</);
+                        teacher = teacher[0].match(/[\u4e00-\u9fa5a-zA-Z\s]{1,}/);
+                        teacher = teacher[0];
+
+                        var tds = trs[index].getElementsByTagName("td");
+                        var span;
+
+                        for (var i = 0; i < teacherResultArray.length; i++) {
+                            if (teacher === teacherResultArray[i].Name) {
+                                break;
+                            }
+                        }
+
+                        if (i >= teacherResultArray.length) {
+                            score = "0.00";
+                            scorenum = 0.0;
+                        } else {
+                            var result = teacherResultArray[i];
+
+                            try {
+                                // msgdata = msg.responseJSON;
+                                var tid = result.tea_id;
+                                score = result.Score;
+                                if (score == "N/A") score = "0.00";
+                                //console.log(score);
+                                scorenum = result.AssessNum;
+                            }
+                            catch (err) {
+                                score = "0.00";
+                            }
+                            if (score == null) {
+                                score = "0.00";
+                            }
+                            if (scorenum == null) {
+                                scorenum = 0.0;
+                            }
+                        }
+
+
+                        span = '<div style="height:15px"></div>';
+                        tds[1].innerHTML = score + " / " + scorenum;
+                        tds[1].onclick = function () {
+                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                        };
+                        tds[1].onmouseover = Changecursor;
+                        $(tds[0]).append(span);
+
+                        if (score > 8.6) {
+                            tds[1].style.color = "red";
+                        }
+                        else {
+                            tds[1].style.color = "";
+                        }
+                    }
+                });
+            }
+            AddSort(1);
+        }
+    });
+
+}
 
 function getScores(times){
     var mark;
@@ -443,123 +553,44 @@ function getScores(times){
             error:function(){
                 swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
             },
-            complete: function (msg,statust){
+            success: function (msgdata){
                 //alert(times);
-                var tds=trs[times].getElementsByTagName("td");
-                var span=document.createElement("td");
-                var span2=document.createElement("td");
+                var tds = trs[times].getElementsByTagName("td");
+                var span;
 
-                try
-                {
-                    msgdata=msg.responseJSON;
+                try {
+                    // msgdata = msg.responseJSON;
                     //console.log(msg);
-                    tid=msgdata.ID;
-                    score=msgdata.Score;
+                    tid = msgdata.ID;
+                    score = msgdata.Score;
                     //console.log(score);
-                    scorenum=msgdata.AssessNum;
+                    scorenum = msgdata.AssessNum;
                 }
-                catch(err)
-                {
-                    score=0.0;
+                catch (err) {
+                    score = 0.0;
                 }
-                if (score==null){
-                    score=0.0;
+                if (score == null) {
+                    score = 0.0;
                 }
-                if (scorenum==null){
-                    scorenum=0.0;
+                if (scorenum == null) {
+                    scorenum = 0.0;
                 }
 
-                if (false){
-                    if (typeof(tid) == "undefined"){
-                        tid=0;
-                    }
-                    $.ajax({
-                        type: "GET",
-                        url: "http://chalaoshi.cn/teacher/" + tid+"/",
-                        cache:false,
-                        error:function(){
-                            swal("学习帝响应超时", "貌似最近访问的人太多了，学习帝忙不过来啦~", "error");
-                        },
-                        complete: function (t,statust) {
-                            t=t.responseText;
-                            //console.log(t);
-                            try {
-                                tmp=t.match(/<h2>.{0,}<\/h2>\s{0,}<p>\d{1,}/);
-                                score=tmp[0].match(/<h2>.{0,}<\/h2>/);
-                                score=score[0].match(/\d{1,3}\.\d{1,3}/);
-                                score=score[0];
-                            }
-                            catch (err) {
-                                //console.log(err);
-                            }
-                            try{
-                                scorenum=tmp[0].match(/<p>\d{1,}/);
-                                scorenum=scorenum[0].replace(/<p>/, "");
+                span = '<div style="height:15px"></div>';
+                tds[1].innerHTML = score + " / " + scorenum;
+                tds[1].onclick = function () {
+                    window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                };
+                tds[1].onmouseover = Changecursor;
+                $(tds[0]).append(span);
 
-                            }catch (err) {
-                                //console.log(err);
-                                scorenum="N/A";
-                            }
-                            try{
-                                var re =new RegExp("<p>"+subject+'<\/p><\/div><divclass="right"><p>[0-9]{0,3}\.[0-9]{0,3}\/[0-9]{0,1}');
-                                gpa= t.replace(/\s/g, "").match(re);
-                                gpa=gpa[0].match(/\d{1,3}\.\d{1,3}/);
-                                gpa=gpa[0];
-                            } catch (err) {
-                                console.log(err);
-                                gpa = "无";
-                            }
-
-                            if (score>8.6){
-
-                                //span.innerHTML='<div style="width:60px"><font color="red">评分：' +mark+'</div>';
-                                span.innerHTML='<div style="height:8px"></div>';
-                                tds[1].innerHTML=score+"/"+scorenum;
-                                tds[1].style.color="red";
-                                tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
-                                tds[1].onmouseover=Changecursor;
-                                tds[0].appendChild(span);
-                            }
-                            else{
-                                span.innerHTML='<div style="height:8px"></div>';
-                                tds[1].innerHTML=score+"/"+scorenum;
-                                tds[1].style.color="";
-                                tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
-                                tds[1].onmouseover=Changecursor;
-                                tds[0].appendChild(span);
-                                //span.innerHTML='<div style="width:60px"><font color="">评分：' +mark+'</div>';
-                            }
-
-
-
-                            span2.innerHTML ='<div style="width:70px">均绩：'+gpa+'</div>';
-                            tds[0].appendChild(span2);
-                            try{
-                                div=tds[0].getElementsByTagName("div");
-                                div[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
-                                div[1].onmouseover=Changecursor;
-                            }
-                            catch (err){}
-                        }
-                    });
-                }else {
-                    if (score>8.6){
-                        span.innerHTML='<div style="height:8px"></div>';
-                        tds[1].innerHTML=score+" / "+scorenum;
-                        tds[1].style.color="red";
-                        tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
-                        tds[1].onmouseover=Changecursor;
-                        tds[0].appendChild(span);
-                    }
-                    else{
-                        span.innerHTML='<div style="height:8px"></div>';
-                        tds[1].innerHTML=score+" / "+scorenum;
-                        tds[1].style.color="";
-                        tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
-                        tds[1].onmouseover=Changecursor;
-                        tds[0].appendChild(span);
-                    }
+                if (score > 8.6) {
+                    tds[1].style.color = "red";
                 }
+                else {
+                    tds[1].style.color = "";
+                }
+
                 //div=tds[0].getElementsByTagName("div");
                 //console.log(tid);
                 //tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
@@ -573,35 +604,65 @@ function getScores(times){
         });
     }
     catch(err) {
-        errorHandler("教师评分及均绩查询模块错误！", err);
+        errorHandler("教师评分查询模块错误！", err);
     }
 }
 
 function Main(){
-    try{
-        if (Timecheck=="disabled"&&Showscore=="disabled"){
-           // swal("插件功能受限！", "主人貌似啥功能都没有开启哦~伐开心 TAT！快去浏览器右上角点击设置开启吧~", "warning");
-        }else if (permit == 0 && Showscore == "enabled"){
-            Showscore="disabled";
-            chrome.runtime.sendMessage({cmd: "scoredisabled"},function(response) {});
-            chrome.runtime.sendMessage({cmd: "GPAdisabled"},function(response) {});
+    try {
+        if (Timecheck == "disabled" && Showscore == "disabled") {
+            // swal("插件功能受限！", "主人貌似啥功能都没有开启哦~伐开心 TAT！快去浏览器右上角点击设置开启吧~", "warning");
+        } else if (permit == 0 && Showscore == "enabled") {
+            Showscore = "disabled";
+            chrome.runtime.sendMessage({cmd: "scoredisabled"}, function (response) {
+            });
+            chrome.runtime.sendMessage({cmd: "GPAdisabled"}, function (response) {
+            });
             swal("插件功能受限！", '由于插件中的教师查询模块涉及@ZJU学习帝的版权问题，只面向小范围开放测试\n插件此项功能即将自动关闭！！可点击右上角图标重新启用\n酷爱来这里申请内测权限吧~:https://enrollment.zju-lab.cn/apply/', "warning");
-        }else {
-            Shownotice(Timecheck,Sparecheck,Showscore);
+        } else {
+            Shownotice(Timecheck, Sparecheck, Showscore);
         }
 
-        if (Timecheck=="enabled"){Time();Spare();}
-        Highlight();
-
-        if (Showscore=="enabled"){ChangeTitle();getScores(1);}
-        else{Adjustlineheight();}
+        if (Showscore == "enabled") {
+            ChangeTitle();
+            getScoresAll();
+            //getScores(1);
+        }
+        else {
+            Adjustlineheight();
+        }
+        if (Timecheck == "enabled") {
+            Checktime(student);
+        }
+        /*if (Timecheck=="enabled"){Checktime(student);Time();Spare();}
+	Highlight();*/
     }
-    catch(err) {
+    catch (err) {
         errorHandler("Main函数错误！", err);
     }
 }
 
+function infoGather(errmsg){
+    $.ajax({
+        url: "https://enrollment.zju-lab.cn/user/errfeedback",
+        timeout : 3000,
+        type : 'POST',
+        dataType:'json',
+        data:{
+            errname: "jwbinfo",
+            errmessage: "jwbinfo",
+            errlog: errmsg,
+            userAgent: navigator.userAgent,
+            stuid: student,
+            version: nowver
+        },
+        cache:false
+    });
+}
+
 function errorHandler(errdesc, errmsg){
+    console.log(errmsg);
+    swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
         url: "https://enrollment.zju-lab.cn/user/errfeedback",
         timeout : 3000,
@@ -617,8 +678,7 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
-    console.log(errmsg);
-    swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 /*-------------------------------------核心函数结束-------------------------------*/
 /*-------------------------------------主程序开始-------------------------------*/
@@ -644,6 +704,7 @@ chrome.runtime.sendMessage({key: "update"},function(res) {
     }catch(err){
         upenabledvalue=0;
     }
+    nowver = res.nowver;
     if (upenabledvalue==1){
         swal({
             title: "检测到主程序更新",
@@ -678,46 +739,44 @@ chrome.runtime.sendMessage({key: "update"},function(res) {
         });
     }
     //else {
-    chrome.runtime.sendMessage({key: "Genuine"},function(isgenuine) {
-        if (isgenuine==0){
-            swal("主程序错误！", "检测到插件被二次打包！\n为保护作者版权，请重新下载官方版本！\n下载地址："+res.updateurl, "error");
-        }
-        else{
-            try{
-                GetSubject();
-				//NProgress.inc();
-                chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
-                    response=response.split(",");
-                    Showscore=response[0];
-                    ShowGPA=response[1];
-                    Timecheck=response[2];
-                    permit=1;
-                    if (Timecheck=="enabled"){
-                        Checktime(student);
-                    }
-                    if (Showscore=="enabled"||ShowGPA=="enabled"){
-                        if(permit==1){
-                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                            //permit=targetdata.valid;
-                            Main();
-                        }else if (permit==0){
-                            Showscore="disabled";
-                            ShowGPA="disabled";
-                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                            Main();
-                        }
-                    }
-                    else {
-                        NProgress.done();
+
+//}
+});
+chrome.runtime.sendMessage({key: "Genuine"},function(isgenuine) {
+    if (isgenuine==0){
+        swal("主程序错误！", "检测到插件被二次打包！\n为保护作者版权，请重新下载官方版本！\n下载地址："+res.updateurl, "error");
+    }
+    else{
+        try{
+            GetSubject();
+            //NProgress.inc();
+            chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
+                response=response.split(",");
+                Showscore=response[0];
+                ShowGPA=response[1];
+                Timecheck=response[2];
+                permit=1;
+                if (Showscore=="enabled"||ShowGPA=="enabled"){
+                    if(permit==1){
+                        chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                        //permit=targetdata.valid;
+                        Main();
+                    }else if (permit==0){
+                        Showscore="disabled";
+                        ShowGPA="disabled";
                         chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
                         Main();
                     }
-                });
-            }
-            catch(err) {
-                errorHandler("主程序错误！", err);
-            }
+                }
+                else {
+                    NProgress.done();
+                    chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                    Main();
+                }
+            });
         }
-    });
-//}
+        catch(err) {
+            errorHandler("主程序错误！", err);
+        }
+    }
 });
