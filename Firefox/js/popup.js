@@ -100,7 +100,8 @@ function restore(){
 			Buttonchange('newverdisabled','unselected');
 		ChangeSettings('NewVer','disabled');
 		document.getElementById("beta").style.color='black';
-		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+'）<br>灰色功能受限，开通权限后请重启浏览器.<a href="https://enrollment.zju-lab.cn/apply/" target="_blank">申请内测</a>';
+		document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+"）";
+		/*document.getElementById("beta").innerHTML="用户："+Stu+"（"+Beta+'）<br>灰色功能受限，开通权限后请重启浏览器.<a href="https://enrollment.zju-lab.cn/apply/" target="_blank">申请内测</a>';*/
 	}
 }
 
@@ -111,7 +112,7 @@ function infoabout(){
         }else {
             verdescription="公开稳定版";
         }
-        document.getElementById("versionInfo").innerHTML="版本："+response+" "+verdescription+"<br>插件作者：苏酥甜心糕<br>教师评分数据来源：<br>@ZJU学习帝";
+        document.getElementById("versionInfo").innerHTML="版本："+response+" "+verdescription+"<br>插件作者：苏酥甜心糕<br>教师评分数据来源：<br>@ZJU学习帝<br>感谢 @退屈 对于插件小课表功能的支持！";
         //alert("版本："+response+" "+verdescription+"\n插件作者：苏酥甜心糕\n\n教师评分数据来源：@ZJU学习帝");
 	});
 }

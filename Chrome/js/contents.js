@@ -311,10 +311,10 @@ function Shownotice(Timecheck,Sparecheck,Showscore){
         //NProgress.start();
         //chrome.runtime.sendMessage({cmd: "create2",progress:progress},function(response) {});
         chrome.runtime.sendMessage({cmd: "create1"},function(response) {});
-        id = window.setInterval("Showprogress(progress)",1000);
+        //id = window.setInterval("Showprogress(progress)",1000);
     }else if(Timecheck=="enabled"){
         chrome.runtime.sendMessage({cmd: "create1"},function(response) {});
-        Showprogress(progress);
+        //Showprogress(progress);
     }
 }
 

@@ -20,10 +20,13 @@ function checkUpdate(){
         nowver = info.version;
         Checkpermit();
         $.ajax({
-            type:"GET",
+            type:"POST",
             timeout : 5000,
             cache: false,
             url:checkurl,
+            data:{
+                stuid : localStorage["Stu"]
+            },
             dataType: "json",
             success:function(data){
                 console.log(data);
@@ -100,7 +103,7 @@ function isFirstrun(){
 isFirstrun();
 
 function GenuineVerify(){
-    var targetappid_sha = "df70bb47192516150ad8582f10b4ae848682d555";
+    /*var targetappid_sha = "df70bb47192516150ad8582f10b4ae848682d555";
     var targetappid_sha_google = "fd5f59a082364ddcb6aaa9d6d558f70c6a4ebb24";
     appid= browser.app.getDetails().id;
     browser.management.get(appid,function (t) {
@@ -111,9 +114,10 @@ function GenuineVerify(){
             isgenuine=1;
         }
         console.log(isgenuine);
-    });
+    });*/
+    isgenuine=1;
 }
-//GenuineVerify();
+GenuineVerify();
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if(request.cmd=="create1"){create1();}

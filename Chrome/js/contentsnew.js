@@ -182,49 +182,54 @@ function doScrollCheck2() {
 }
 
 function Addbtn() {
-    console.log(courseitem);
+    //console.log(courseitem);
     try{
         if ($(courseitem[0]).find(".nodata").length != 0) return;
 
         var that = $(courseitem[0]).find(".kc_head").get(0);
-        var addfunc = function(){
-            console.log(that)
-            if ($(that).parent().find("tbody").get(0).childElementCount === 0){
-                return setTimeout(addfunc, 1000);
-            }
-            Superlookup(0, 0);
-            that.setAttribute('state', 1);
-        };
-
-        addfunc();
-
-        for (var j = 0; j < courseitem.length; j++) {
-            var thats = $(courseitem[j]).find(".kc_head").get(0);
-            thats.setAttribute('checkid',j);
-            thats.setAttribute('state',0);
-            thats.addEventListener("click", function () {
-                try{
-                    var searchState = this.getAttribute('state');
-                    var that = this;
-                    var func = function(){
-                        if ($(that).parent().find("tbody").get(0).childElementCount === 0){
-                            return setTimeout(func, 1000);
-                        }
-                        Superlookup(that.getAttribute('checkid'), searchState);
-                        if (searchState == 0) {
-                            that.setAttribute('state', 1);
-                        }
-                    };
-
-                    func();
-
-                    //console.log(courseitem[j]);
-                    //console.log(courseitem.find("tr[class='body_tr']"));
-                }catch (err){
-                    errorHandler("AddEventListener 函数错误！",err);
+        if(that.getAttribute('state') == null){
+            that.setAttribute('state', 0);
+            var addfunc = function(){
+                //console.log(that)
+                if ($(that).parent().find("tbody").get(0).childElementCount === 0){
+                    return setTimeout(addfunc, 1000);
                 }
-            });
+                Superlookup(0, that.getAttribute('state'));
+                that.setAttribute('state', 1);
+            };
 
+            addfunc();
+        }
+
+        for (var j = 1; j < courseitem.length; j++) {
+            var thats = $(courseitem[j]).find(".kc_head").get(0);
+            if (thats.getAttribute('state') == null){
+                thats.setAttribute('checkid', j);
+                thats.setAttribute('state', 0);
+                thats.addEventListener("click", function () {
+                    try {
+                        if ($(this).find(".expand1").get(0) != null){
+                            var searchState = this.getAttribute('state');
+                            var that = this;
+                            var func = function () {
+                                if ($(that).parent().find("tbody").get(0).childElementCount === 0) {
+                                    return setTimeout(func, 1000);
+                                }
+                                Superlookup(that.getAttribute('checkid'), searchState);
+                                if (searchState == 0) {
+                                    that.setAttribute('state', 1);
+                                }
+                            };
+
+                            func();
+                        }
+                        //console.log(courseitem[j]);
+                        //console.log(courseitem.find("tr[class='body_tr']"));
+                    } catch (err) {
+                        errorHandler("AddEventListener 函数错误！", err);
+                    }
+                });
+            }
 
             additem = $(courseitem[j]).find("tr[class='active']").get(0);
             //console.log($(additem).find("button[type='button']").length);
@@ -237,7 +242,7 @@ function Addbtn() {
                 //console.log(additem);
                 buttonitem = $(additem).find("button[type='button']").get(0);
                 buttonitem.addEventListener("click", function () {
-                    try{
+                    try {
                         btnstate = this.getAttribute('state');
 
                         //console.log("btnstate", btnstate);
@@ -248,8 +253,8 @@ function Addbtn() {
                         }
                         //console.log(courseitem[j]);
                         //console.log(courseitem.find("tr[class='body_tr']"));
-                    }catch (err){
-                        errorHandler("ButtonaddEventListener 函数错误！",err);
+                    } catch (err) {
+                        errorHandler("ButtonaddEventListener 函数错误！", err);
                     }
                 });
             }
@@ -351,37 +356,41 @@ function Superchoose(id, btnstate) {
             $(marktitle).after('<th nowrap="nowrap" id="score">评分/人数</th>');
             titlesort = $(courseitem[id]).find("tr[class='active']").get(0);
             titlesort = $(titlesort).find("th");
-            //console.log(titlesort);
-            titlesort.get(1).innerText += "▲";
-            titlesort.get(1).onmouseover = Changecursor;
-            titlesort.get(3).innerText += "▲";
-            titlesort.get(3).onmouseover = Changecursor;
-            titlesort.get(4).innerText += "▲";
-            titlesort.get(4).onmouseover = Changecursor;
-            titlesort.get(8).innerText += "▲";
-            titlesort.get(8).onmouseover = Changecursor;
+            if (titlesort.get(1) != null){
+                //console.log(titlesort);
+                titlesort.get(1).innerText += "▲";
+                titlesort.get(1).onmouseover = Changecursor;
+                titlesort.get(3).innerText += "▲";
+                titlesort.get(3).onmouseover = Changecursor;
+                titlesort.get(4).innerText += "▲";
+                titlesort.get(4).onmouseover = Changecursor;
+                titlesort.get(8).innerText += "▲";
+                titlesort.get(8).onmouseover = Changecursor;
 
-            titlesort.get(1).addEventListener("click", function () {
-                sortTable(code, 2, 'float');
-                titlesort.get(1).innerText = ChangeSortTitie(titlesort.get(1).innerText);
-            });
-            titlesort.get(3).addEventListener("click", function () {
-                sortTable(code, 4, 'string');
-                titlesort.get(3).innerText = ChangeSortTitie(titlesort.get(3).innerText);
-            });
-            titlesort.get(4).addEventListener("click", function () {
-                sortTable(code, 5, 'string');
-                titlesort.get(4).innerText = ChangeSortTitie(titlesort.get(4).innerText);
-            });
-            titlesort.get(8).addEventListener("click", function () {
-                sortTable(code, 9, 'int');
-                titlesort.get(8).innerText = ChangeSortTitie(titlesort.get(8).innerText);
-                //this.innerText=this.innerText+"↑"
-            });
+                titlesort.get(1).addEventListener("click", function () {
+                    sortTable(code, 2, 'float');
+                    titlesort.get(1).innerText = ChangeSortTitie(titlesort.get(1).innerText);
+                });
+                titlesort.get(3).addEventListener("click", function () {
+                    sortTable(code, 4, 'string');
+                    titlesort.get(3).innerText = ChangeSortTitie(titlesort.get(3).innerText);
+                });
+                titlesort.get(4).addEventListener("click", function () {
+                    sortTable(code, 5, 'string');
+                    titlesort.get(4).innerText = ChangeSortTitie(titlesort.get(4).innerText);
+                });
+                titlesort.get(8).addEventListener("click", function () {
+                    sortTable(code, 9, 'int');
+                    titlesort.get(8).innerText = ChangeSortTitie(titlesort.get(8).innerText);
+                    //this.innerText=this.innerText+"↑"
+                });
+            }
+
         }
 
-
+        if (courseitem[id] == null) return;
         coursecode = courseitem[id].innerText.match(/\(.{1,}\)/);
+        if (coursecode == null) return;
         coursecode = coursecode[0].replace(/\({0,1}\){0,1}/g, "");
         //console.log(coursecode);
         idtemp = parseInt(id) + 1;
@@ -828,10 +837,13 @@ function getScoresAll(){
     var teacherArray = [];
 
     $.each(teacheritem,function(index,trsVal){
-        var teacher = $(teacheritem.get(index)).find("td[class='jsxm']").get(0).innerText;
-        teacher = teacher.split('\n')[0];
-        teacher = teacher.split(' ')[0];
-        teacherArray.push(teacher)
+        var teacher = $(teacheritem.get(index)).find("td[class='jsxm']").get(0);
+        if(teacher != null){
+            teacher = teacher.innerText;
+            teacher = teacher.split('\n')[0];
+            teacher = teacher.split(' ')[0];
+            teacherArray.push(teacher)
+        }
     });
 
     $.ajax({
@@ -862,31 +874,33 @@ function getScoresAll(){
                             }
                         }
 
-                        if (i >= teacherResultArray.length) {
-                            score = 0.0;
-                            scorenum = 0.0;
-                        } else {
-                            var result = teacherResultArray[i];
+                    if (i >= teacherResultArray.length) {
+                        score = "0.00";
+                        scorenum = 0.0;
+                    } else {
+                        var result = teacherResultArray[i];
 
-                            try {
-                                // msgdata = msg.responseJSON;
-                                var tid = result.tea_id;
-                                score = result.Score;
-                                //console.log(score);
-                                scorenum = result.AssessNum;
-                            }
-                            catch (err) {
-                                score = 0.0;
-                            }
-                            if (score == null) {
-                                score = 0.0;
-                            }
-                            if (scorenum == null) {
-                                scorenum = 0.0;
-                            }
+                        try {
+                            // msgdata = msg.responseJSON;
+                            var tid = result.tea_id;
+                            score = result.Score;
+                            if (score == "N/A") score = "0.00";
+                            //console.log(score);
+                            scorenum = result.AssessNum;
                         }
+                        catch (err) {
+                            score = "0.00";
+                        }
+                        if (score == null) {
+                            score = "0.00";
+                        }
+                        if (scorenum == null) {
+                            scorenum = 0.0;
+                        }
+                    }
 
-                        scoredigit = $(teacheritem.get(index)).find("td[id='scoredigit']").get(0);
+
+                    scoredigit = $(teacheritem.get(index)).find("td[id='scoredigit']").get(0);
                         scoredigit.innerHTML = score + "/" + scorenum;
                         scoredigit.onmouseover = Changecursor;
                         scoredigit.onclick = function () {

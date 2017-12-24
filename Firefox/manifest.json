@@ -1,7 +1,7 @@
 ﻿{
 "manifest_version":2,
 "name":"选课助手",
-"version":"4.20",
+"version":"4.23",
 "minimum_chrome_version":"30.0.1312.52",
 "description":"浙江大学教务系统选课助手，可查看老师在学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~",
 "icons":{"16":"images/icon16.png","32":"images/icon32.png","48":"images/icon48.png","128":"images/icon128.png"},
@@ -22,8 +22,14 @@
 	"run_at":"document_end",
 	"all_frames":true
 	},{
+	"matches":["http://jwbinfosys.zju.edu.cn/xscxbm.aspx?xh=*","http://10.202.78.13/xscxbm.aspx?xh=*","http://10.202.78.12/xscxbm.aspx?xh=*"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/public.js","js/sort.js","js/search_old.js"],
+	"css":["css/sweetalert.css","css/nprogress.css"],
+	"run_at":"document_end",
+	"all_frames":true
+	},{
 	"matches":["http://10.202.78.14/jwglxt/*","http://localhost/course/*"],
-	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort2.js","js/contentsnew.js"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort2.js","js/contentsnew.js","js/timetable.js"],
 	"css":["css/sweetalert.css","css/nprogress.css"],
 	"run_at":"document_end",
 	"all_frames":true

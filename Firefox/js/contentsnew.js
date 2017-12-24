@@ -62,10 +62,9 @@ $(document).ready(function () {
             });
         }
         chrome.runtime.sendMessage({key: "Genuine"}, function (isgenuine) {
-            //if (isgenuine==0){
-            if (false){
+            if (isgenuine == 0) {
                 swal("主程序错误！", "检测到插件被二次打包！\n为保护作者版权，请重新下载官方版本！\n下载地址：" + res.updateurl, "error");
-                infoGather(document.getElementsByTagName('html')[0].innerHTML);
+                //infoGather(document.getElementsByTagName('html')[0].innerHTML);
             }
             else {
                 chrome.runtime.sendMessage({key: "Getsettings"}, function (response) {
@@ -88,56 +87,64 @@ $(document).ready(function () {
 });
 
 function Main() {
-    try{
-        WaitForReady();
-        if ($("#outer_xkxx").length > 0){
-            infoGather(document.getElementsByTagName('html')[0].innerHTML);
-        }
-        for (var i = 0; i < title.length; i++) {
-            dropdown = $(title.get(i)).find(".dropdown-menu");
-            if (dropdown.length == 0) {
-                addevent = title.get(i);
-                addevent.addEventListener("click", function () {
-                    doScrollCheck2();
-                    infoGather(document.getElementsByTagName('html')[0].innerHTML);
-                });
-            } else {
-                addevent = $(dropdown).find("li");
-                for (var k = 0; k < addevent.length; k++) {
-                    addevent.get(k).addEventListener("click", function () {
+    try {
+
+        title = $(".leaf");
+        if (title.length === 0) {
+            return setTimeout(Main, 1000);
+        } else {
+            //WaitForReady();
+            if ($("#outer_xkxx").length > 0) {
+                // infoGather(document.getElementsByTagName('html')[0].innerHTML);
+            }
+            for (var i = 0; i < title.length; i++) {
+                var dropdown = $(title.get(i)).find(".dropdown-menu");
+                var addevent;
+                if (dropdown.length == 0) {
+                    addevent = title.get(i);
+                    addevent.addEventListener("click", function () {
                         doScrollCheck2();
-                        infoGather(document.getElementsByTagName('html')[0].innerHTML);
+                        // infoGather(document.getElementsByTagName('html')[0].innerHTML);
                     });
+                } else {
+                    addevent = $(dropdown).find("li");
+                    for (var k = 0; k < addevent.length; k++) {
+                        addevent.get(k).addEventListener("click", function () {
+                            doScrollCheck2();
+                            // infoGather(document.getElementsByTagName('html')[0].innerHTML);
+                        });
+                    }
                 }
             }
+
+            var course_has_enroll = $(".jump");
+            $.each(course_has_enroll, function (index, value, array) {
+                value.addEventListener("click", function () {
+                    var search_button = $("#btn_cxjxb").get(0);
+                    if (!search_button) {
+                        return setTimeout(doScrollCheck2, 1000);
+                    }
+                });
+            });
+
+
+            doScrollCheck2();
         }
 
-        var course_has_enroll = $(".jump");
-        $.each(course_has_enroll, function(index, value, array) {
-            value.addEventListener("click", function () {
-                var search_button = $("#btn_cxjxb").get(0);
-                if (!search_button) {
-                    return setTimeout(doScrollCheck2, 1000);
-                }
-            });
-        });
 
-
-        doScrollCheck2();
-    }catch (err){
-        errorHandler("Main 函数错误！",err);
+    } catch (err) {
+        errorHandler("Main 函数错误！", err);
     }
 }
 
 function WaitForReady() {
     try{
         title = $(".leaf");
-        if (title.length == 0) {
+        if (title.length === 0) {
             return setTimeout(WaitForReady, 1000);
-        }
-        /*else {
+        } else {
             console.log(title);
-        }*/
+        }
     }catch (err){
         errorHandler("WaitForReady 函数错误！",err);
     }
@@ -179,20 +186,63 @@ function Addbtn() {
     try{
         if ($(courseitem[0]).find(".nodata").length != 0) return;
 
-        for (var j = 0; j < courseitem.length; j++) {
-            //courseitem[j].setAttribute('checkid',j);
+        var that = $(courseitem[0]).find(".kc_head").get(0);
+        if(that.getAttribute('state') == null){
+            that.setAttribute('state', 0);
+            var addfunc = function(){
+                //console.log(that)
+                if ($(that).parent().find("tbody").get(0).childElementCount === 0){
+                    return setTimeout(addfunc, 1000);
+                }
+                Superlookup(0, that.getAttribute('state'));
+                that.setAttribute('state', 1);
+            };
+
+            addfunc();
+        }
+
+        for (var j = 1; j < courseitem.length; j++) {
+            var thats = $(courseitem[j]).find(".kc_head").get(0);
+            if (thats.getAttribute('state') == null){
+                thats.setAttribute('checkid', j);
+                thats.setAttribute('state', 0);
+                thats.addEventListener("click", function () {
+                    try {
+                        if ($(this).find(".expand1").get(0) != null){
+                            var searchState = this.getAttribute('state');
+                            var that = this;
+                            var func = function () {
+                                if ($(that).parent().find("tbody").get(0).childElementCount === 0) {
+                                    return setTimeout(func, 1000);
+                                }
+                                Superlookup(that.getAttribute('checkid'), searchState);
+                                if (searchState == 0) {
+                                    that.setAttribute('state', 1);
+                                }
+                            };
+
+                            func();
+                        }
+                        //console.log(courseitem[j]);
+                        //console.log(courseitem.find("tr[class='body_tr']"));
+                    } catch (err) {
+                        errorHandler("AddEventListener 函数错误！", err);
+                    }
+                });
+            }
 
             additem = $(courseitem[j]).find("tr[class='active']").get(0);
             //console.log($(additem).find("button[type='button']").length);
+
             if ($(additem).find("button[type='button']").length == 0) {
                 //if(titlestate==0){
-                addbutton = $(additem).append('<th width="5%"><button class="btn btn-warning" type="button" checkid=' + j + ' state="0">开始查询</button></th>');
+                addbutton = $(additem).append('<th style="display: none" width="5%"><button class="btn btn-warning" type="button" checkid=' + j + ' state="0">开始查询</button></th>');
                 addbutton = addbutton[0];
                 //}
                 //console.log(additem);
                 buttonitem = $(additem).find("button[type='button']").get(0);
                 buttonitem.addEventListener("click", function () {
-                    try{
+                    try {
                         btnstate = this.getAttribute('state');
 
                         //console.log("btnstate", btnstate);
@@ -203,8 +253,8 @@ function Addbtn() {
                         }
                         //console.log(courseitem[j]);
                         //console.log(courseitem.find("tr[class='body_tr']"));
-                    }catch (err){
-                        errorHandler("ButtonaddEventListener 函数错误！",err);
+                    } catch (err) {
+                        errorHandler("ButtonaddEventListener 函数错误！", err);
                     }
                 });
             }
@@ -265,7 +315,7 @@ function Checktime(student, id, btnstate) {
 
                 enrollinfo[j] = {course: courseCode, courseterm: courseTerm, coursetime: courseTime};
 
-                console.log(enrollinfo[j]);
+                //console.log(enrollinfo[j]);
 
                 //res=Convertday(coursetime);
                 //console.log(res);
@@ -277,7 +327,7 @@ function Checktime(student, id, btnstate) {
                 }
             }
         }
-        console.log(commonBusyTime);
+        //console.log(commonBusyTime);
         Superchoose(id, btnstate);
     }catch(err){
         errorHandler("Checktime 函数错误！",err);
@@ -300,43 +350,47 @@ function Superchoose(id, btnstate) {
         additem = $(courseitem[id]).find("tr[class='active']").get(0);
         if (btnstate == 0) {
 
-            deloper = $(additem).find("th").get(10);
-            $(deloper).remove();
+            //deloper = $(additem).find("th").get(10);
+            //$(deloper).remove();
             marktitle = $(additem).find("th").get(0);
             $(marktitle).after('<th nowrap="nowrap" id="score">评分/人数</th>');
             titlesort = $(courseitem[id]).find("tr[class='active']").get(0);
             titlesort = $(titlesort).find("th");
-            //console.log(titlesort);
-            titlesort.get(1).innerText += "▲";
-            titlesort.get(1).onmouseover = Changecursor;
-            titlesort.get(3).innerText += "▲";
-            titlesort.get(3).onmouseover = Changecursor;
-            titlesort.get(4).innerText += "▲";
-            titlesort.get(4).onmouseover = Changecursor;
-            titlesort.get(8).innerText += "▲";
-            titlesort.get(8).onmouseover = Changecursor;
+            if (titlesort.get(1) != null){
+                //console.log(titlesort);
+                titlesort.get(1).innerText += "▲";
+                titlesort.get(1).onmouseover = Changecursor;
+                titlesort.get(3).innerText += "▲";
+                titlesort.get(3).onmouseover = Changecursor;
+                titlesort.get(4).innerText += "▲";
+                titlesort.get(4).onmouseover = Changecursor;
+                titlesort.get(8).innerText += "▲";
+                titlesort.get(8).onmouseover = Changecursor;
 
-            titlesort.get(1).addEventListener("click", function () {
-                sortTable(code, 2, 'float');
-                titlesort.get(1).innerText = ChangeSortTitie(titlesort.get(1).innerText);
-            });
-            titlesort.get(3).addEventListener("click", function () {
-                sortTable(code, 4, 'string');
-                titlesort.get(3).innerText = ChangeSortTitie(titlesort.get(3).innerText);
-            });
-            titlesort.get(4).addEventListener("click", function () {
-                sortTable(code, 5, 'string');
-                titlesort.get(4).innerText = ChangeSortTitie(titlesort.get(4).innerText);
-            });
-            titlesort.get(8).addEventListener("click", function () {
-                sortTable(code, 9, 'int');
-                titlesort.get(8).innerText = ChangeSortTitie(titlesort.get(8).innerText);
-                //this.innerText=this.innerText+"↑"
-            });
+                titlesort.get(1).addEventListener("click", function () {
+                    sortTable(code, 2, 'float');
+                    titlesort.get(1).innerText = ChangeSortTitie(titlesort.get(1).innerText);
+                });
+                titlesort.get(3).addEventListener("click", function () {
+                    sortTable(code, 4, 'string');
+                    titlesort.get(3).innerText = ChangeSortTitie(titlesort.get(3).innerText);
+                });
+                titlesort.get(4).addEventListener("click", function () {
+                    sortTable(code, 5, 'string');
+                    titlesort.get(4).innerText = ChangeSortTitie(titlesort.get(4).innerText);
+                });
+                titlesort.get(8).addEventListener("click", function () {
+                    sortTable(code, 9, 'int');
+                    titlesort.get(8).innerText = ChangeSortTitie(titlesort.get(8).innerText);
+                    //this.innerText=this.innerText+"↑"
+                });
+            }
+
         }
 
-
+        if (courseitem[id] == null) return;
         coursecode = courseitem[id].innerText.match(/\(.{1,}\)/);
+        if (coursecode == null) return;
         coursecode = coursecode[0].replace(/\({0,1}\){0,1}/g, "");
         //console.log(coursecode);
         idtemp = parseInt(id) + 1;
@@ -412,7 +466,8 @@ function Superchoose(id, btnstate) {
 
 
             }
-            getScores(0, id);
+            getScoresAll();
+            //getScores(0, id);
         }
     }catch(err){
         errorHandler("Superchoose 函数错误！",err);
@@ -778,6 +833,93 @@ function Spare(Sparedata) {
     }
 }
 
+function getScoresAll(){
+    var teacherArray = [];
+
+    $.each(teacheritem,function(index,trsVal){
+        var teacher = $(teacheritem.get(index)).find("td[class='jsxm']").get(0);
+        if(teacher != null){
+            teacher = teacher.innerText;
+            teacher = teacher.split('\n')[0];
+            teacher = teacher.split(' ')[0];
+            teacherArray.push(teacher)
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        data:{
+            student: student,
+            teacher: JSON.stringify(teacherArray)
+        },
+        url: "https://enrollment.zju-lab.cn/user/quickSearch",
+        error:function(){
+            swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
+        },
+        success: function (msgdata){
+            if (msgdata.success === 0) {
+                var teacherResultArray = msgdata.data;
+
+                $.each(teacheritem, function (index, trsVal) {
+                    var scoredigit;
+
+                        var teacher = $(teacheritem.get(index)).find("td[class='jsxm']").get(0).innerText;
+                        teacher = teacher.split('\n')[0];
+                        teacher = teacher.split(' ')[0];
+
+                        for (var i = 0; i < teacherResultArray.length; i++) {
+                            if (teacher === teacherResultArray[i].Name) {
+                                break;
+                            }
+                        }
+
+                    if (i >= teacherResultArray.length) {
+                        score = "0.00";
+                        scorenum = 0.0;
+                    } else {
+                        var result = teacherResultArray[i];
+
+                        try {
+                            // msgdata = msg.responseJSON;
+                            var tid = result.tea_id;
+                            score = result.Score;
+                            if (score == "N/A") score = "0.00";
+                            //console.log(score);
+                            scorenum = result.AssessNum;
+                        }
+                        catch (err) {
+                            score = "0.00";
+                        }
+                        if (score == null) {
+                            score = "0.00";
+                        }
+                        if (scorenum == null) {
+                            scorenum = 0.0;
+                        }
+                    }
+
+
+                    scoredigit = $(teacheritem.get(index)).find("td[id='scoredigit']").get(0);
+                        scoredigit.innerHTML = score + "/" + scorenum;
+                        scoredigit.onmouseover = Changecursor;
+                        scoredigit.onclick = function () {
+                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                        };
+
+                        if (score > 8.6) {
+                            scoredigit.style.color = "red";
+                        }
+                        else {
+                            scoredigit.style.color = "";
+                        }
+
+                });
+            }
+        }
+    });
+
+}
 
 function getScores(times, courseid) {
     try{
@@ -890,6 +1032,8 @@ function infoGather(errmsg){
 
 
 function errorHandler(errdesc, errmsg){
+    console.log(errmsg);
+    swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
         url: "https://enrollment.zju-lab.cn/user/errfeedback",
         timeout : 3000,
@@ -905,8 +1049,7 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
-    console.log(errmsg);
-    swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 
 

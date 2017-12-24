@@ -23,7 +23,6 @@ function getAjaxEnabled(t) {
             url: adjustinner+'/'+ tds,
             cache: false,
             success: function (datat) {
-                console.log(datat);
                 datat = datat.match(/target='_blank'>.{1,}<\/a><\/td><td>.{1,}<\/td>/g);
                 var _timeok;
                 var _spareok;
