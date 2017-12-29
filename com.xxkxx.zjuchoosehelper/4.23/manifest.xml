@@ -4,7 +4,7 @@
 	<name>选课助手</name> 
 	<show_icon>true</show_icon> 
 	<description>浙江大学教务系统选课助手，可查看老师在学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~</description> 
-	<version>4.19</version>
+	<version>4.23</version>
 	<request_api_version>1</request_api_version>
 	<author>苏酥甜心糕</author>
 	<popup page="popup.html"/> 
@@ -37,6 +37,19 @@
 				<js>js/public.min.js</js> 
 				<js>js/judgecourse.min.js</js> 
 	       	</content_script> 
+	       	<content_script all_frames="true" core_type="webkit"> 
+				<match>http://jwbinfosys.zju.edu.cn/xscxbm.aspx?xh=*</match> 
+				<match>http://10.202.78.13/xscxbm.aspx?xh=*</match> 
+				<match>http://10.202.78.12/xscxbm.aspx?xh=*</match> 
+				<css>css/sweetalert.css</css> 
+				<css>css/nprogress.css</css> 
+				<js>js/sweetalert.min.js</js> 
+				<js>js/jquery.js</js> 
+				<js>js/nprogress.js</js> 
+				<js>js/public.min.js</js> 
+				<js>js/sort.js</js> 
+				<js>js/search_old.min.js</js> 
+	       	</content_script> 
 			<content_script all_frames="true" core_type="webkit"> 
 				<match>http://10.202.78.14/jwglxt/*</match> 
 				<css>css/sweetalert.css</css> 
@@ -46,6 +59,7 @@
 				<js>js/nprogress.js</js> 
 				<js>js/sort2.js</js>
 				<js>js/contentsnew.min.js</js>
+				<js>js/timetable.min.js</js>
 	       	</content_script> 
     </content_scripts>
 </extension> 
