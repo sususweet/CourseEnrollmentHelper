@@ -63,8 +63,12 @@ function GetSubject(){
     //获取课程名
     subject = document.getElementById("Label_jbxx").innerText;
     subject = subject.match(/课程名称：.*学分/);
-    subject = subject[0].substr(5);
-    subject=trimStr(subject.substr(0,subject.length-2));
+    if (subject != null){
+        subject = subject[0].substr(5);
+        subject = trimStr(subject.substr(0,subject.length-2));
+    }else{
+        subject = "";
+    }
 }
 
 function Convertday(coursetime,courseterm){
@@ -370,10 +374,14 @@ function Spare(){
         for(var i=1;i<trs.length;i++){
             var tds=trs[i].getElementsByTagName("td");
             var space=tds[7].innerHTML;
-            space=space.match(/[-\d{1,}\/]/);
-            space=space[0].match(/\d{1,}/);
+            space = space.match(/[-\d{1,}\/]/);
+            if (space != null){
+                space = space[0].match(/\d{1,}/);
+            }else{
+                space = 0;
+            }
             var input=tds[11].getElementsByTagName("input");
-            if (space<=0){
+            if (space <= 0){
                 if (input[0].checked==false){
                     input[0].setAttribute("disabled","disabled");
                     input[0].style.display="none";
@@ -386,10 +394,11 @@ function Spare(){
     }
 }
 
-function Adjustlineheight(){
-    for(var i=1;i<trs.length;i++){
-        var tds=trs[i].getElementsByTagName("td");
-        var span='<div style="height:15px"></div>';
+function Adjustlineheight() {
+    for (var i = 1; i < trs.length; i++) {
+        var tds = trs[i].getElementsByTagName("td");
+        var span = '<div style="height:15px"></div>';
+        console.log(tds)
         tds[0].append(span);
     }
 }
@@ -623,19 +632,20 @@ function Main(){
             Shownotice(Timecheck, Sparecheck, Showscore);
         }
 
-        if (Showscore == "enabled") {
-            ChangeTitle();
-            getScoresAll();
-            //getScores(1);
-        }
-        else {
+
+        ChangeTitle();
+        getScoresAll();
+        //getScores(1);
+
+        /*else {
             Adjustlineheight();
-        }
-        if (Timecheck == "enabled") {
+        }*/
+        Checktime(student);
+        /*if (Timecheck == "enabled") {
             Checktime(student);
-        }
+        }*/
         /*if (Timecheck=="enabled"){Checktime(student);Time();Spare();}
-	Highlight();*/
+	    Highlight();*/
     }
     catch (err) {
         errorHandler("Main函数错误！", err);

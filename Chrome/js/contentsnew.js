@@ -419,51 +419,54 @@ function Superchoose(id, btnstate) {
                 var timeok = 1;
                 var spareok = 1;
                 CourseInfo = teacheritem.get(t);
-                teacher = $(CourseInfo).find("td[class='jsxm']").get(0).innerText;
+                if (CourseInfo != null){
+                    teacher = $(CourseInfo).find("td[class='jsxm']").get(0);
+                    if (teacher != null) {
+                        teacher = teacher.innerText;
+                        teacher = teacher.split('\n')[0];
+                        teacher = teacher.split(' ')[0];
+                        //teacheritem.get(t).setAttribute('style','color:#C2C2C2');
+                        //teacheritem.get(t).setAttribute('class','success');
+                        //teacheritem.get(t).setAttribute('class','warning');
+                        if (btnstate == 0) {
+                            scoredigit = $(CourseInfo).find("td[class='jsxm']").get(0);
+                            $(scoredigit).after('<td id="scoredigit">暂无</td>');
+                        }
+                        //console.log(CourseInfo);
+                        enroll = $(CourseInfo).find("td[class='an']").get(0);
+                        chosen = $(enroll).find("button").get(0).innerHTML;
+                        //console.log($(enroll).find("button"));
+                        courseterm = $(CourseInfo).find("td[class='xxq']").get(0).innerText;
+                        coursetime = $(CourseInfo).find("td[class='sksj']").get(0).innerText;
+                        coursespace = $(CourseInfo).find("td[class='rsxx']").get(0).innerText;
 
-                teacher = teacher.split('\n')[0];
-                teacher = teacher.split(' ')[0];
-                //teacheritem.get(t).setAttribute('style','color:#C2C2C2');
-                //teacheritem.get(t).setAttribute('class','success');
-                //teacheritem.get(t).setAttribute('class','warning');
-                if (btnstate == 0) {
-                    scoredigit = $(CourseInfo).find("td[class='jsxm']").get(0);
-                    $(scoredigit).after('<td id="scoredigit">暂无</td>');
+                        if (Timecheck == "enabled") {
+                            if (Spare(coursespace) == 0 && chosen == "选课") {
+                                enroll.setAttribute('style', 'visibility:hidden');
+                                spareok = 0;
+                            } else {
+                                spareok = 1;
+                            }
+
+                            coursetime = coursetime.replace(/\n/g, '<br>');
+                            if (Time(coursetime, courseterm, coursecode) == 0) {
+                                CourseInfo.setAttribute('style', 'color:#C2C2C2');
+                                timeok = 0;
+                            } else {
+                                CourseInfo.setAttribute('style', 'color:#000000');
+                                timeok = 1;
+                            }
+                            //console.log(chosen);
+                            if (chosen == "退选") {
+                                CourseInfo.setAttribute('class', 'danger');
+                            } else if (timeok == 1 && spareok == 1) {
+                                CourseInfo.setAttribute('class', 'success');
+                            } else {
+                                CourseInfo.setAttribute('class', 'body_tr');
+                            }
+                        }
+                    }
                 }
-                //console.log(CourseInfo);
-                enroll = $(CourseInfo).find("td[class='an']").get(0);
-                chosen = $(enroll).find("button").get(0).innerHTML;
-                //console.log($(enroll).find("button"));
-                courseterm = $(CourseInfo).find("td[class='xxq']").get(0).innerText;
-                coursetime = $(CourseInfo).find("td[class='sksj']").get(0).innerText;
-                coursespace = $(CourseInfo).find("td[class='rsxx']").get(0).innerText;
-
-                if (Timecheck == "enabled"){
-                    if (Spare(coursespace) == 0 && chosen == "选课") {
-                        enroll.setAttribute('style', 'visibility:hidden');
-                        spareok = 0;
-                    } else {
-                        spareok = 1;
-                    }
-
-                    coursetime = coursetime.replace(/\n/g, '<br>');
-                    if (Time(coursetime, courseterm, coursecode) == 0) {
-                        CourseInfo.setAttribute('style', 'color:#C2C2C2');
-                        timeok = 0;
-                    } else {
-                        CourseInfo.setAttribute('style', 'color:#000000');
-                        timeok = 1;
-                    }
-                    //console.log(chosen);
-                    if (chosen == "退选") {
-                        CourseInfo.setAttribute('class', 'danger');
-                    } else if (timeok == 1 && spareok == 1) {
-                        CourseInfo.setAttribute('class', 'success');
-                    } else {
-                        CourseInfo.setAttribute('class', 'body_tr');
-                    }
-                }
-
 
             }
             getScoresAll();
