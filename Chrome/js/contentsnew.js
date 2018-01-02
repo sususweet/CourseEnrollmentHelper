@@ -1035,6 +1035,7 @@ function infoGather(errmsg){
 
 
 function errorHandler(errdesc, errmsg){
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
@@ -1052,7 +1053,6 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
-    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 
 

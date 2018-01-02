@@ -671,6 +671,7 @@ function infoGather(errmsg){
 }
 
 function errorHandler(errdesc, errmsg){
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
@@ -688,7 +689,6 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
-    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 /*-------------------------------------核心函数结束-------------------------------*/
 /*-------------------------------------主程序开始-------------------------------*/
@@ -759,31 +759,33 @@ chrome.runtime.sendMessage({key: "Genuine"},function(isgenuine) {
     else{
         try{
             GetSubject();
-            //NProgress.inc();
-            chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
-                response=response.split(",");
-                Showscore=response[0];
-                ShowGPA=response[1];
-                Timecheck=response[2];
-                permit=1;
-                if (Showscore=="enabled"||ShowGPA=="enabled"){
-                    if(permit==1){
-                        chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                        //permit=targetdata.valid;
-                        Main();
-                    }else if (permit==0){
-                        Showscore="disabled";
-                        ShowGPA="disabled";
+            if (subject !== ""){
+                chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
+                    response=response.split(",");
+                    Showscore=response[0];
+                    ShowGPA=response[1];
+                    Timecheck=response[2];
+                    permit=1;
+                    if (Showscore=="enabled"||ShowGPA=="enabled"){
+                        if(permit==1){
+                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                            //permit=targetdata.valid;
+                            Main();
+                        }else if (permit==0){
+                            Showscore="disabled";
+                            ShowGPA="disabled";
+                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                            Main();
+                        }
+                    }
+                    else {
+                        NProgress.done();
                         chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
                         Main();
                     }
-                }
-                else {
-                    NProgress.done();
-                    chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                    Main();
-                }
-            });
+                });
+            }
+
         }
         catch(err) {
             errorHandler("主程序错误！", err);
