@@ -11,25 +11,25 @@
 	"default_title": ""},
 "content_scripts":[{
 	"matches":["http://jwbinfosys.zju.edu.cn/xsxjs.aspx?xkkh=*","http://10.202.78.13/xsxjs.aspx?xkkh=*","http://10.202.78.12/xsxjs.aspx?xkkh=*"],
-	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort.js","js/contents.js"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort.js","js/contents.min.js"],
 	"css":["css/sweetalert.css","css/nprogress.css"],
 	"run_at":"document_end",
 	"all_frames":true
 	},{
 	"matches":["http://jwbinfosys.zju.edu.cn/xsxk.aspx?xh=*","http://10.202.78.13/xsxk.aspx?xh=*","http://10.202.78.12/xsxk.aspx?xh=*"],
-	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/public.js","js/judgecourse.js"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/public.min.js","js/judgecourse.min.js"],
 	"css":["css/sweetalert.css","css/nprogress.css"],
 	"run_at":"document_end",
 	"all_frames":true
 	},{
 	"matches":["http://jwbinfosys.zju.edu.cn/xscxbm.aspx?xh=*","http://10.202.78.13/xscxbm.aspx?xh=*","http://10.202.78.12/xscxbm.aspx?xh=*"],
-	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/public.js","js/sort.js","js/search_old.js"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/public.min.js","js/sort.js","js/search_old.min.js"],
 	"css":["css/sweetalert.css","css/nprogress.css"],
 	"run_at":"document_end",
 	"all_frames":true
 	},{
-	"matches":["http://10.202.78.14/jwglxt/*","http://localhost/course/*"],
-	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort2.js","js/contentsnew.js","js/timetable.js"],
+	"matches":["http://10.202.78.14/jwglxt/*"],
+	"js":["js/sweetalert.min.js","js/jquery.js","js/nprogress.js","js/sort2.js","js/contentsnew.min.js","js/timetable.min.js"],
 	"css":["css/sweetalert.css","css/nprogress.css"],
 	"run_at":"document_end",
 	"all_frames":true

@@ -10,67 +10,31 @@ var upenabled;
 var version;
 
 function checkUpdate(){
-var updatelogs="";
-checkurl="https://enrollment.zju-lab.cn/user/checkUpdate/";
-	nowver=sogouExplorer.runtime.getManifest().version;
-		Checkpermit();
-		$.ajax({ 
-            	type:"POST",
-		timeout : 5000,
-		cache: false,
-		url:checkurl,
-                data:{
-                    stuid : localStorage["Stu"]
-                },
-		dataType: "json", 
-		success:function(data){	
-			console.log(data);
-			codebase=data.codebase;
-			version=data.version;
-			if (version>nowver){
-				upenabled=1;
-				/*updatelog=$.ajax({ 
-				type:"GET", 
-				timeout : 5000,
-				async:false,
-				cache:false,
-				url: "http://www.zjuchoosehelper.icoc.cc/nd.jsp?id=9"
-				}).responseText; 
-				updatelog=updatelog.match(/richContent3'>\n.{0,}\n<\/div>/);
-				updatelog=updatelog[0].match(/<p>.{0,}<\/p>/g);
-				updatelog=updatelog[0].split("</p>");
-				for (var i=0;i<updatelog.length-1;i++){
-					log=updatelog[i].replace("</p>","");
-					log=log.replace("<p>","");
-					updatelogs=updatelogs+log+"\n";
-				}*/
-				//alert("选课助手要更新啦啦啦~点击确定下载！主人记得安装哦！！\n\n当前版本："+nowver+"\n\n最新版本："+version+"\n\n更新日志：\n"+updatelogs);
-				//window.open(codebase);
-			}
-			else{
-				upenabled=0;
-			}
-		}
-	}); 
-}
-
-checkUpdate();
-
-function Checkpermit(){
-    ajaxTimeoutTest=$.ajax({
+    nowver=sogouExplorer.runtime.getManifest().version;
+    var ajaxTimeoutTest = $.ajax({
         url: "https://enrollment.zju-lab.cn/user/permit?uid="+localStorage["Stu"]+"&type=1&ver="+nowver,
         timeout : 3000,
         type : 'GET',
         dataType:'json',
-        async:false,
         cache:false,
         success:function(targetdata){
+            console.log(targetdata);
             permit=targetdata.valid;
             localStorage["Beta"]=permit;
+            codebase=targetdata.codebase;
+            version=targetdata.version;
+            if (version>nowver){
+                upenabled=1;
+                //alert("选课助手要更新啦啦啦~点击确定下载！主人记得安装哦！！\n\n当前版本："+nowver+"\n\n最新版本："+version+"\n\n更新日志：\n"+updatelogs);
+                //window.open(codebase);
+            }
+            else{
+                upenabled=0;
+            }
         },
         complete:function(XMLHttpRequest,status){
             if(status=='timeout'){
-                //ajaxTimeoutTest.abort();
+                // ajaxTimeoutTest.abort();
                 localStorage["Beta"]=0;
             }
             if(status=='error'){//超时,status还有success,error等值的情况
@@ -80,6 +44,7 @@ function Checkpermit(){
     });
 }
 
+checkUpdate();
 
 function isFirstrun(){
     var firstrun=localStorage["isFirstrun"];
@@ -173,10 +138,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 //教师均绩查询模块贡献者：Qui γ Far\n\n
 /*chrome.extension.onRequest.addListener(function(request,sender,sendResponse) {
-
-
-    });*/
-
+});*/
 
 function create1(){
     var opt={
@@ -184,7 +146,7 @@ function create1(){
         title:"选课助手",
         message:"萌萌哒选课助手正在为你努力查询哦……o(〃'▽'〃)o",
         iconUrl:"/images/icon128.png",
-    }
+    };
     chrome.notifications.create('1', opt);
 }
 
@@ -198,7 +160,7 @@ function create2(progress){
         progress:  Math.round(progress),
         //eventTime: Date.now() + 20000,
         //priority:2,
-    }
+    };
     chrome.notifications.create('1', opt);
 }
 
@@ -212,7 +174,7 @@ function update(progress){
         progress: Math.round(progress),
         //eventTime: Date.now() + 20000,
         //priority:2,
-    }
+    };
     chrome.notifications.update('1', opt);
 }
 
@@ -222,7 +184,7 @@ function finish(){
         title:"选课助手",
         message:"选课助手已经完成主人交给的任务了呢~\(^o^)/！现在主人可以很方便地选课啦~",
         iconUrl:"/images/finish.png",
-    }
+    };
     chrome.notifications.create('1', opt);
 }
 

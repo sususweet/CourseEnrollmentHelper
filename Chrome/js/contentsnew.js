@@ -293,11 +293,11 @@ function Checktime(student, id, btnstate) {
             courseArray = $($(enrollCourseInfo[j]).find("ul")[0]).find("li");
 
             //courseArray = $($($(enrollCourseInfo[j]).find("ul")[0]).find("table")[0]).find("tr");
-
+			
             for (var index = 0; index < courseArray.length; index++){
                 var courseTerm;
                 try {
-                    courseTerm = $($($(courseArray[index]).find("table")[0]).find("td")[5]).find("p")[0].innerHTML;
+                    courseTerm = $($(courseArray[index]).find("table")[0]).find("[class='xxq']")[0].innerHTML;
                     courseTerm = trimStr(courseTerm);
                 } catch (err) {
                     courseTerm = "0";
@@ -305,7 +305,7 @@ function Checktime(student, id, btnstate) {
 
                 var courseTime;
                 try {
-                    courseTime = $($($(courseArray[index]).find("table")[0]).find("td")[6]).find("p")[0].innerHTML;
+                    courseTime = $($(courseArray[index]).find("table")[0]).find("[class='time']")[0].innerHTML;
                     courseTime = trimStr(courseTime);
                     if (courseTime === "--") courseTime = "0";
                 }
@@ -315,7 +315,7 @@ function Checktime(student, id, btnstate) {
 
                 enrollinfo[j] = {course: courseCode, courseterm: courseTerm, coursetime: courseTime};
 
-                //console.log(enrollinfo[j]);
+                console.log(enrollinfo[j]);
 
                 //res=Convertday(coursetime);
                 //console.log(res);
@@ -419,54 +419,51 @@ function Superchoose(id, btnstate) {
                 var timeok = 1;
                 var spareok = 1;
                 CourseInfo = teacheritem.get(t);
-                if (CourseInfo != null){
-                    teacher = $(CourseInfo).find("td[class='jsxm']").get(0);
-                    if (teacher != null) {
-                        teacher = teacher.innerText;
-                        teacher = teacher.split('\n')[0];
-                        teacher = teacher.split(' ')[0];
-                        //teacheritem.get(t).setAttribute('style','color:#C2C2C2');
-                        //teacheritem.get(t).setAttribute('class','success');
-                        //teacheritem.get(t).setAttribute('class','warning');
-                        if (btnstate == 0) {
-                            scoredigit = $(CourseInfo).find("td[class='jsxm']").get(0);
-                            $(scoredigit).after('<td id="scoredigit">暂无</td>');
-                        }
-                        //console.log(CourseInfo);
-                        enroll = $(CourseInfo).find("td[class='an']").get(0);
-                        chosen = $(enroll).find("button").get(0).innerHTML;
-                        //console.log($(enroll).find("button"));
-                        courseterm = $(CourseInfo).find("td[class='xxq']").get(0).innerText;
-                        coursetime = $(CourseInfo).find("td[class='sksj']").get(0).innerText;
-                        coursespace = $(CourseInfo).find("td[class='rsxx']").get(0).innerText;
+                teacher = $(CourseInfo).find("td[class='jsxm']").get(0).innerText;
 
-                        if (Timecheck == "enabled") {
-                            if (Spare(coursespace) == 0 && chosen == "选课") {
-                                enroll.setAttribute('style', 'visibility:hidden');
-                                spareok = 0;
-                            } else {
-                                spareok = 1;
-                            }
+                teacher = teacher.split('\n')[0];
+                teacher = teacher.split(' ')[0];
+                //teacheritem.get(t).setAttribute('style','color:#C2C2C2');
+                //teacheritem.get(t).setAttribute('class','success');
+                //teacheritem.get(t).setAttribute('class','warning');
+                if (btnstate == 0) {
+                    scoredigit = $(CourseInfo).find("td[class='jsxm']").get(0);
+                    $(scoredigit).after('<td id="scoredigit">暂无</td>');
+                }
+                //console.log(CourseInfo);
+                enroll = $(CourseInfo).find("td[class='an']").get(0);
+                chosen = $(enroll).find("button").get(0).innerHTML;
+                //console.log($(enroll).find("button"));
+                courseterm = $(CourseInfo).find("td[class='xxq']").get(0).innerText;
+                coursetime = $(CourseInfo).find("td[class='sksj']").get(0).innerText;
+                coursespace = $(CourseInfo).find("td[class='rsxx']").get(0).innerText;
 
-                            coursetime = coursetime.replace(/\n/g, '<br>');
-                            if (Time(coursetime, courseterm, coursecode) == 0) {
-                                CourseInfo.setAttribute('style', 'color:#C2C2C2');
-                                timeok = 0;
-                            } else {
-                                CourseInfo.setAttribute('style', 'color:#000000');
-                                timeok = 1;
-                            }
-                            //console.log(chosen);
-                            if (chosen == "退选") {
-                                CourseInfo.setAttribute('class', 'danger');
-                            } else if (timeok == 1 && spareok == 1) {
-                                CourseInfo.setAttribute('class', 'success');
-                            } else {
-                                CourseInfo.setAttribute('class', 'body_tr');
-                            }
-                        }
+                if (Timecheck == "enabled"){
+                    if (Spare(coursespace) == 0 && chosen == "选课") {
+                        enroll.setAttribute('style', 'visibility:hidden');
+                        spareok = 0;
+                    } else {
+                        spareok = 1;
+                    }
+
+                    coursetime = coursetime.replace(/\n/g, '<br>');
+                    if (Time(coursetime, courseterm, coursecode) == 0) {
+                        CourseInfo.setAttribute('style', 'color:#C2C2C2');
+                        timeok = 0;
+                    } else {
+                        CourseInfo.setAttribute('style', 'color:#000000');
+                        timeok = 1;
+                    }
+                    //console.log(chosen);
+                    if (chosen == "退选") {
+                        CourseInfo.setAttribute('class', 'danger');
+                    } else if (timeok == 1 && spareok == 1) {
+                        CourseInfo.setAttribute('class', 'success');
+                    } else {
+                        CourseInfo.setAttribute('class', 'body_tr');
                     }
                 }
+
 
             }
             getScoresAll();
@@ -907,7 +904,7 @@ function getScoresAll(){
                         scoredigit.innerHTML = score + "/" + scorenum;
                         scoredigit.onmouseover = Changecursor;
                         scoredigit.onclick = function () {
-                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                            window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                         };
 
                         if (score > 8.6) {
@@ -972,7 +969,7 @@ function getScores(times, courseid) {
                 scoredigit.innerHTML = score + "/" + scorenum;
                 scoredigit.onmouseover = Changecursor;
                 scoredigit.onclick = function () {
-                    window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                    window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                 }
                 if (score > 8.6) {
                     scoredigit.style.color = "red";
@@ -1035,7 +1032,6 @@ function infoGather(errmsg){
 
 
 function errorHandler(errdesc, errmsg){
-    infoGather(document.getElementsByTagName('html')[0].innerHTML);
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
@@ -1053,6 +1049,7 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 
 

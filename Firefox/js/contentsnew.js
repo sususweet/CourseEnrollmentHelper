@@ -293,11 +293,11 @@ function Checktime(student, id, btnstate) {
             courseArray = $($(enrollCourseInfo[j]).find("ul")[0]).find("li");
 
             //courseArray = $($($(enrollCourseInfo[j]).find("ul")[0]).find("table")[0]).find("tr");
-
+			
             for (var index = 0; index < courseArray.length; index++){
                 var courseTerm;
                 try {
-                    courseTerm = $($($(courseArray[index]).find("table")[0]).find("td")[5]).find("p")[0].innerHTML;
+                    courseTerm = $($(courseArray[index]).find("table")[0]).find("[class='xxq']")[0].innerHTML;
                     courseTerm = trimStr(courseTerm);
                 } catch (err) {
                     courseTerm = "0";
@@ -305,7 +305,7 @@ function Checktime(student, id, btnstate) {
 
                 var courseTime;
                 try {
-                    courseTime = $($($(courseArray[index]).find("table")[0]).find("td")[6]).find("p")[0].innerHTML;
+                    courseTime = $($(courseArray[index]).find("table")[0]).find("[class='time']")[0].innerHTML;
                     courseTime = trimStr(courseTime);
                     if (courseTime === "--") courseTime = "0";
                 }
@@ -315,7 +315,7 @@ function Checktime(student, id, btnstate) {
 
                 enrollinfo[j] = {course: courseCode, courseterm: courseTerm, coursetime: courseTime};
 
-                //console.log(enrollinfo[j]);
+                console.log(enrollinfo[j]);
 
                 //res=Convertday(coursetime);
                 //console.log(res);
@@ -904,7 +904,7 @@ function getScoresAll(){
                         scoredigit.innerHTML = score + "/" + scorenum;
                         scoredigit.onmouseover = Changecursor;
                         scoredigit.onclick = function () {
-                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                            window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                         };
 
                         if (score > 8.6) {
@@ -969,7 +969,7 @@ function getScores(times, courseid) {
                 scoredigit.innerHTML = score + "/" + scorenum;
                 scoredigit.onmouseover = Changecursor;
                 scoredigit.onclick = function () {
-                    window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                    window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                 }
                 if (score > 8.6) {
                     scoredigit.style.color = "red";

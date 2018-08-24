@@ -63,12 +63,8 @@ function GetSubject(){
     //获取课程名
     subject = document.getElementById("Label_jbxx").innerText;
     subject = subject.match(/课程名称：.*学分/);
-    if (subject != null){
-        subject = subject[0].substr(5);
-        subject = trimStr(subject.substr(0,subject.length-2));
-    }else{
-        subject = "";
-    }
+    subject = subject[0].substr(5);
+    subject=trimStr(subject.substr(0,subject.length-2));
 }
 
 function Convertday(coursetime,courseterm){
@@ -374,14 +370,10 @@ function Spare(){
         for(var i=1;i<trs.length;i++){
             var tds=trs[i].getElementsByTagName("td");
             var space=tds[7].innerHTML;
-            space = space.match(/[-\d{1,}\/]/);
-            if (space != null){
-                space = space[0].match(/\d{1,}/);
-            }else{
-                space = 0;
-            }
+            space=space.match(/[-\d{1,}\/]/);
+            space=space[0].match(/\d{1,}/);
             var input=tds[11].getElementsByTagName("input");
-            if (space <= 0){
+            if (space<=0){
                 if (input[0].checked==false){
                     input[0].setAttribute("disabled","disabled");
                     input[0].style.display="none";
@@ -394,11 +386,10 @@ function Spare(){
     }
 }
 
-function Adjustlineheight() {
-    for (var i = 1; i < trs.length; i++) {
-        var tds = trs[i].getElementsByTagName("td");
-        var span = '<div style="height:15px"></div>';
-        console.log(tds)
+function Adjustlineheight(){
+    for(var i=1;i<trs.length;i++){
+        var tds=trs[i].getElementsByTagName("td");
+        var span='<div style="height:15px"></div>';
         tds[0].append(span);
     }
 }
@@ -514,7 +505,7 @@ function getScoresAll(){
                         span = '<div style="height:15px"></div>';
                         tds[1].innerHTML = score + " / " + scorenum;
                         tds[1].onclick = function () {
-                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                            window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                         };
                         tds[1].onmouseover = Changecursor;
                         $(tds[0]).append(span);
@@ -588,7 +579,7 @@ function getScores(times){
                 span = '<div style="height:15px"></div>';
                 tds[1].innerHTML = score + " / " + scorenum;
                 tds[1].onclick = function () {
-                    window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                    window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                 };
                 tds[1].onmouseover = Changecursor;
                 $(tds[0]).append(span);
@@ -602,7 +593,7 @@ function getScores(times){
 
                 //div=tds[0].getElementsByTagName("div");
                 //console.log(tid);
-                //tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
+                //tds[1].onclick=function (){window.open("https://chalaoshi.cn/teacher/" + tid+"/");}
                 //div[0].onmouseover=Changecursor; 
 
                 times ++;
@@ -632,20 +623,19 @@ function Main(){
             Shownotice(Timecheck, Sparecheck, Showscore);
         }
 
-
-        ChangeTitle();
-        getScoresAll();
-        //getScores(1);
-
-        /*else {
+        if (Showscore == "enabled") {
+            ChangeTitle();
+            getScoresAll();
+            //getScores(1);
+        }
+        else {
             Adjustlineheight();
-        }*/
-        Checktime(student);
-        /*if (Timecheck == "enabled") {
+        }
+        if (Timecheck == "enabled") {
             Checktime(student);
-        }*/
+        }
         /*if (Timecheck=="enabled"){Checktime(student);Time();Spare();}
-	    Highlight();*/
+	Highlight();*/
     }
     catch (err) {
         errorHandler("Main函数错误！", err);
@@ -671,7 +661,6 @@ function infoGather(errmsg){
 }
 
 function errorHandler(errdesc, errmsg){
-    infoGather(document.getElementsByTagName('html')[0].innerHTML);
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
@@ -689,6 +678,7 @@ function errorHandler(errdesc, errmsg){
         },
         cache:false
     });
+    infoGather(document.getElementsByTagName('html')[0].innerHTML);
 }
 /*-------------------------------------核心函数结束-------------------------------*/
 /*-------------------------------------主程序开始-------------------------------*/
@@ -759,33 +749,31 @@ chrome.runtime.sendMessage({key: "Genuine"},function(isgenuine) {
     else{
         try{
             GetSubject();
-            if (subject !== ""){
-                chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
-                    response=response.split(",");
-                    Showscore=response[0];
-                    ShowGPA=response[1];
-                    Timecheck=response[2];
-                    permit=1;
-                    if (Showscore=="enabled"||ShowGPA=="enabled"){
-                        if(permit==1){
-                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                            //permit=targetdata.valid;
-                            Main();
-                        }else if (permit==0){
-                            Showscore="disabled";
-                            ShowGPA="disabled";
-                            chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
-                            Main();
-                        }
-                    }
-                    else {
-                        NProgress.done();
+            //NProgress.inc();
+            chrome.runtime.sendMessage({key: "Getsettings"},function(response) {
+                response=response.split(",");
+                Showscore=response[0];
+                ShowGPA=response[1];
+                Timecheck=response[2];
+                permit=1;
+                if (Showscore=="enabled"||ShowGPA=="enabled"){
+                    if(permit==1){
+                        chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                        //permit=targetdata.valid;
+                        Main();
+                    }else if (permit==0){
+                        Showscore="disabled";
+                        ShowGPA="disabled";
                         chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
                         Main();
                     }
-                });
-            }
-
+                }
+                else {
+                    NProgress.done();
+                    chrome.runtime.sendMessage({cmd: "clear"},function(response) {});
+                    Main();
+                }
+            });
         }
         catch(err) {
             errorHandler("主程序错误！", err);

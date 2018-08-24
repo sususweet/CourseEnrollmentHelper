@@ -505,7 +505,7 @@ function getScoresAll(){
                         span = '<div style="height:15px"></div>';
                         tds[1].innerHTML = score + " / " + scorenum;
                         tds[1].onclick = function () {
-                            window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                            window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                         };
                         tds[1].onmouseover = Changecursor;
                         $(tds[0]).append(span);
@@ -579,7 +579,7 @@ function getScores(times){
                 span = '<div style="height:15px"></div>';
                 tds[1].innerHTML = score + " / " + scorenum;
                 tds[1].onclick = function () {
-                    window.open("http://chalaoshi.cn/teacher/" + tid + "/");
+                    window.open("https://chalaoshi.cn/teacher/" + tid + "/");
                 };
                 tds[1].onmouseover = Changecursor;
                 $(tds[0]).append(span);
@@ -593,7 +593,7 @@ function getScores(times){
 
                 //div=tds[0].getElementsByTagName("div");
                 //console.log(tid);
-                //tds[1].onclick=function (){window.open("http://chalaoshi.cn/teacher/" + tid+"/");}
+                //tds[1].onclick=function (){window.open("https://chalaoshi.cn/teacher/" + tid+"/");}
                 //div[0].onmouseover=Changecursor; 
 
                 times ++;
