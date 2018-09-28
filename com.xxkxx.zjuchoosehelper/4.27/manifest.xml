@@ -4,7 +4,7 @@
 	<name>选课助手</name> 
 	<show_icon>true</show_icon> 
 	<description>浙江大学教务系统选课助手，可查看老师在学习帝上的评分和均绩，并通过优化算法查询课程余量及上课时间冲突情况~o(≧v≦)o~~</description> 
-	<version>4.25</version>
+	<version>4.27</version>
 	<request_api_version>1</request_api_version>
 	<author>苏酥甜心糕</author>
 	<popup page="popup.html"/> 

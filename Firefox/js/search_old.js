@@ -190,7 +190,7 @@ function getScoresAll(){
             student: student,
             teacher: JSON.stringify(teacherArray)
         },
-        url: "https://enrollment.zju-lab.cn/user/quickSearch",
+        url: "https://enroll.zjuqsc.com/user/quickSearch",
         error:function(){
             swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
         },
@@ -358,7 +358,7 @@ function errorHandler(errdesc, errmsg){
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
-        url: "https://enrollment.zju-lab.cn/user/errfeedback",
+        url: "https://enroll.zjuqsc.com/user/errfeedback",
         timeout : 3000,
         type : 'POST',
         dataType:'json',

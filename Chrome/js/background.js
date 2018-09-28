@@ -13,7 +13,7 @@ function checkUpdate(){
     $.get(chrome.extension.getURL('manifest.json'), function(info){
         nowver = info.version;
         var ajaxTimeoutTest = $.ajax({
-            url: "https://enrollment.zju-lab.cn/user/permit?uid="+localStorage["Stu"]+"&type=1&ver="+nowver,
+            url: "https://enroll.zjuqsc.com/user/permit?uid="+localStorage["Stu"]+"&type=1&ver="+nowver,
             timeout : 3000,
             type : 'GET',
             dataType:'json',
@@ -52,7 +52,7 @@ function isFirstrun(){
     var firstrun=localStorage["isFirstrun"];
     if (!firstrun||firstrun==0) {
         //window.open(chrome.extension.getURL('help.html'));
-	window.open('https://enrollment.zju-lab.cn/help');
+	window.open('https://enroll.zjuqsc.com/help');
 	localStorage["isFirstrun"] = 1;
     }
     var Showinfo=localStorage["Showinfo"];

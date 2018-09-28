@@ -451,7 +451,7 @@ function getScoresAll(){
             student: student,
             teacher: JSON.stringify(teacherArray)
         },
-        url: "https://enrollment.zju-lab.cn/user/quickSearch",
+        url: "https://enroll.zjuqsc.com/user/quickSearch",
         error:function(){
             swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
         },
@@ -549,7 +549,7 @@ function getScores(times){
         $.ajax({
             type:"GET",
             dataType: "json",
-            url: "https://enrollment.zju-lab.cn/user/search?name="+teacher,
+            url: "https://enroll.zjuqsc.com/user/search?name="+teacher,
             error:function(){
                 swal("服务器响应超时", "貌似最近访问的人太多了，服务器忙不过来啦~", "error");
             },
@@ -618,7 +618,7 @@ function Main(){
             });
             chrome.runtime.sendMessage({cmd: "GPAdisabled"}, function (response) {
             });
-            swal("插件功能受限！", '由于插件中的教师查询模块涉及@ZJU学习帝的版权问题，只面向小范围开放测试\n插件此项功能即将自动关闭！！可点击右上角图标重新启用\n酷爱来这里申请内测权限吧~:https://enrollment.zju-lab.cn/apply/', "warning");
+            swal("插件功能受限！", '由于插件中的教师查询模块涉及@ZJU学习帝的版权问题，只面向小范围开放测试\n插件此项功能即将自动关闭！！可点击右上角图标重新启用\n酷爱来这里申请内测权限吧~:https://enroll.zjuqsc.com/apply/', "warning");
         } else {
             Shownotice(Timecheck, Sparecheck, Showscore);
         }
@@ -644,7 +644,7 @@ function Main(){
 
 function infoGather(errmsg){
     $.ajax({
-        url: "https://enrollment.zju-lab.cn/user/errfeedback",
+        url: "https://enroll.zjuqsc.com/user/errfeedback",
         timeout : 3000,
         type : 'POST',
         dataType:'json',
@@ -664,7 +664,7 @@ function errorHandler(errdesc, errmsg){
     console.log(errmsg);
     swal(errdesc, "呜呜……/(ㄒoㄒ)/~选课助手崩溃啦，崩溃日志已经被上传到服务器，请等待作者回应。您还可以联系作者详细描述错误情形以帮助改进插件~\n\n错误信息：\n" + errmsg, "error");
     $.ajax({
-        url: "https://enrollment.zju-lab.cn/user/errfeedback",
+        url: "https://enroll.zjuqsc.com/user/errfeedback",
         timeout : 3000,
         type : 'POST',
         dataType:'json',
