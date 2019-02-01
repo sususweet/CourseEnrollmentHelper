@@ -62,6 +62,7 @@ function Convertweekly(week){
 function GetSubject(){
     //获取课程名
     subject = document.getElementById("Label_jbxx").innerText;
+    if (!subject) return;
     subject = subject.match(/课程名称：.*学分/);
     subject = subject[0].substr(5);
     subject=trimStr(subject.substr(0,subject.length-2));

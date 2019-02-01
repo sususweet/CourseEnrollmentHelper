@@ -203,7 +203,7 @@ function Addbtn() {
 
         for (var j = 1; j < courseitem.length; j++) {
             var thats = $(courseitem[j]).find(".kc_head").get(0);
-            if (thats.getAttribute('state') == null){
+            if (thats && thats.getAttribute('state') == null){
                 thats.setAttribute('checkid', j);
                 thats.setAttribute('state', 0);
                 thats.addEventListener("click", function () {
@@ -293,7 +293,7 @@ function Checktime(student, id, btnstate) {
             courseArray = $($(enrollCourseInfo[j]).find("ul")[0]).find("li");
 
             //courseArray = $($($(enrollCourseInfo[j]).find("ul")[0]).find("table")[0]).find("tr");
-			
+
             for (var index = 0; index < courseArray.length; index++){
                 var courseTerm;
                 try {
@@ -399,14 +399,14 @@ function Superchoose(id, btnstate) {
         teacheritem = $(courseitem[id]).find("tbody").get(0);
         teacheritem = $(teacheritem).find("tr");
 
-        if (teacheritem.length == 0) {
+        if (teacheritem && teacheritem.length == 0) {
             //courseitem=$(".panel-info");
             //return setTimeout(doScrollCheck3, 50);
         } else {
             //console.log(teacheritem);
 
             var isTyk = false;
-            if ($("#tykTool")[0].getAttribute("aria-expanded") == "true"){
+            if ($("#tykTool")[0] && $("#tykTool")[0].getAttribute("aria-expanded") == "true"){
                 isTyk = true;
                 busytime = tykBusytime;
             }else{
@@ -419,7 +419,9 @@ function Superchoose(id, btnstate) {
                 var timeok = 1;
                 var spareok = 1;
                 CourseInfo = teacheritem.get(t);
-                teacher = $(CourseInfo).find("td[class='jsxm']").get(0).innerText;
+                teacher = $(CourseInfo).find("td[class='jsxm']").get(0);
+                if (!teacher) continue;
+                teacher = teacher.innerText;
 
                 teacher = teacher.split('\n')[0];
                 teacher = teacher.split(' ')[0];
@@ -480,9 +482,9 @@ function Superlookup(id, btnstate) {
     //btn=$(additem).find("button[checkid='"+id+"']").button('loading');
     //student=window.document.location.search.match(/userName=\d{1,}/)[0].replace("userName=","");
     student = $("#sessionUserKey").val();
-    Shownotice(Timecheck,Showscore);
+    Showprogress();
+    // Shownotice(Timecheck,Showscore);
     Checktime(student, id, btnstate);
-
 }
 
 
@@ -724,8 +726,9 @@ function AddSort(type) {
 
 function Showprogress() {
     if (Timecheck == "enabled" && Showscore == "disabled") {
-        chrome.runtime.sendMessage({cmd: "finish"}, function (response) {
-        });
+        // disable at 2019.01.31
+        //chrome.runtime.sendMessage({cmd: "finish"}, function (response) {
+        //});
         AddSort(0);
         /*var title = document.getElementsByTagName('title')[0];
         if (!title) {
@@ -738,8 +741,9 @@ function Showprogress() {
         }*/
     }
     else if (Showscore == "enabled") {
-        chrome.runtime.sendMessage({cmd: "finish"}, function (response) {
-        });
+        // disable at 2019.01.31
+        // chrome.runtime.sendMessage({cmd: "finish"}, function (response) {
+        // });
         /*var title = document.getElementsByTagName('title')[0];
         if (!title) {
             var title = document.createElement('title');
@@ -821,7 +825,9 @@ function Time(Timedata, Termdata, Codedata) {
  */
 function Spare(Sparedata) {
     try{
-        Sparedata = Sparedata.split("/")[0];
+        Sparedata = Sparedata.split("/");
+        if (!Sparedata) return 0;
+        Sparedata = Sparedata[0];
         if (Sparedata <= 0) {
             return 0;
         } else {
